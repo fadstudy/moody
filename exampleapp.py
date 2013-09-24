@@ -7,17 +7,23 @@ import urllib
 import hmac
 import json
 import hashlib
+import datetime
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 
 import requests
 from flask import Flask, request, redirect, render_template, url_for
 
-FB_APP_ID = os.environ.get('FACEBOOK_APP_ID')
+# TODO: Remove hardcoded ID
+FB_APP_ID = 498777246878058
+# FB_APP_ID = os.environ.get('FACEBOOK_APP_ID')
 requests = requests.session()
 
 app_url = 'https://graph.facebook.com/{0}'.format(FB_APP_ID)
-FB_APP_NAME = json.loads(requests.get(app_url).content).get('name')
-FB_APP_SECRET = os.environ.get('FACEBOOK_SECRET')
+FB_APP_NAME = 'The FAD Study'
+# FB_APP_NAME = json.loads(requests.get(app_url).content).get('name')
+# TODO: Remove hardcoded ID
+FB_APP_SECRET = '02272a1ef565d2bbbec38c64e464094f'
+# FB_APP_SECRET = os.environ.get('FACEBOOK_SECRET')
 
 
 def oauth_login_url(preserve_path=True, next_url=None):
@@ -196,13 +202,15 @@ def index():
 
         url = request.url
 
+        date = datetime.datetime.now().strftime('%A, %d %B')
+
         return render_template(
             'index.html', app_id=FB_APP_ID, token=access_token, likes=likes,
             friends=friends, photos=photos, app_friends=app_friends, app=fb_app,
             me=me, POST_TO_WALL=POST_TO_WALL, SEND_TO=SEND_TO, url=url,
-            channel_url=channel_url, name=FB_APP_NAME)
+            channel_url=channel_url, name=FB_APP_NAME, date=date)
     else:
-        return render_template('login.html', app_id=FB_APP_ID, token=access_token, url=request.url, channel_url=channel_url, name=FB_APP_NAME)
+        return render_template('login.html', app_id=FB_APP_ID, token=access_token, url=request.url, channel_url=channel_url, name=FB_APP_NAME, date=date)
 
 @app.route('/channel.html', methods=['GET', 'POST'])
 def get_channel():

@@ -7,7 +7,107 @@
   <!-- them ahead of time -->
   <p id="picture" style="background-image: url(https://graph.facebook.com/me/picture?type=normal&access_token={{token}})"></p>
 
-  <div>
+  <div id='response'>
+    <form class="form-horizontal">
+      <fieldset>
+      <!-- Form Name -->
+      <legend>Your response for {{ date }}</legend>
+
+      <!-- Multiple Radios (inline) -->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="mood-radio">What would you rate your mood out of 10?</label>
+        <div class="col-md-8">
+          <label class="radio-inline" for="mood-radio-0">
+            <input type="radio" name="mood-radio" id="mood-radio-0" value="1">
+            1
+          </label>
+          <label class="radio-inline" for="mood-radio-1">
+            <input type="radio" name="mood-radio" id="mood-radio-1" value="2">
+            2
+          </label>
+          <label class="radio-inline" for="mood-radio-2">
+            <input type="radio" name="mood-radio" id="mood-radio-2" value="3">
+            3
+          </label>
+          <label class="radio-inline" for="mood-radio-3">
+            <input type="radio" name="mood-radio" id="mood-radio-3" value="4">
+            4
+          </label>
+          <label class="radio-inline" for="mood-radio-4">
+            <input type="radio" name="mood-radio" id="mood-radio-4" checked="checked" value="5">
+            5
+          </label>
+          <label class="radio-inline" for="mood-radio-5">
+            <input type="radio" name="mood-radio" id="mood-radio-5" value="6">
+            6
+          </label>
+          <label class="radio-inline" for="mood-radio-6">
+            <input type="radio" name="mood-radio" id="mood-radio-6" value="7">
+            7
+          </label>
+          <label class="radio-inline" for="mood-radio-7">
+            <input type="radio" name="mood-radio" id="mood-radio-7" value="8">
+            8
+          </label>
+          <label class="radio-inline" for="mood-radio-8">
+            <input type="radio" name="mood-radio" id="mood-radio-8" value="9">
+            9
+          </label>
+          <label class="radio-inline" for="mood-radio-9">
+            <input type="radio" name="mood-radio" id="mood-radio-9" value="10">
+            10
+          </label>
+        </div>
+      </div>
+
+      <!-- Multiple Radios -->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="hospital-radio">Have you been in hospital in the last two weeks?</label>
+        <div class="col-md-4">
+        <div class="radio">
+          <label for="hospital-radio-0">
+            <input type="radio" name="hospital-radio" id="hospital-radio-0" value="0" checked="checked">
+            No
+          </label>
+          </div>
+        <div class="radio">
+          <label for="hospital-radio-1">
+            <input type="radio" name="hospital-radio" id="hospital-radio-1" value="1">
+            Yes
+          </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Multiple Radios -->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="meds-radio">Have your meds changed in the last two weeks?</label>
+        <div class="col-md-4">
+        <div class="radio">
+          <label for="meds-radio-0">
+            <input type="radio" name="meds-radio" id="meds-radio-0" value="0" checked="checked">
+            No
+          </label>
+          </div>
+        <div class="radio">
+          <label for="meds-radio-1">
+            <input type="radio" name="meds-radio" id="meds-radio-1" value="1">
+            Yes
+          </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Button -->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="submit-button"></label>
+        <div class="col-md-4">
+          <button id="submit-button" name="submit-button" class="btn btn-default">Submit</button>
+        </div>
+      </div>
+
+      </fieldset>
+    </form>
     <h1>Welcome, <strong>{{me.name}}</strong></h1>
     <p class="tagline">
       This is your app
@@ -38,7 +138,7 @@
 {% endblock %}
 
 {% block content %}
-<section class="clearfix" id="samples">
+<!-- <section class="clearfix" id="samples">
       <h1>Examples of the Facebook Graph API</h1>
       <div class="list">
         <h3>A few of your friends</h3>
@@ -86,5 +186,13 @@
             </a>
         </li>{% endfor %}</ul>
       </div>
-    </section>
+    </section> -->
+<script>
+$(function(){
+  $('#submit-button').click(function(){
+    $('.form-horizontal').hide();
+    $('#response').html('<h3>Thanks, we have recorded your response for today</h3>');
+  });
+});
+</script>
 {% endblock%}

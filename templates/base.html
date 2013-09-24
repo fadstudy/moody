@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
     <link rel="stylesheet" href="static/css/style.css">
     <link rel="stylesheet" href="static/css/social-buttons-3.css">
-    <link rel="stylesheet" href="static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -36,7 +36,7 @@
     <![endif]-->
 
     <!-- Scripts -->
-    <script src="jquery.min.js"></script>
+    <script src="static/javascript/jquery.min.js"></script>
     <script type="text/javascript">
       function logResponse(response) {
         if (console && console.log) {
@@ -136,11 +136,7 @@
       }(document, 'script', 'facebook-jssdk'));
     </script>
 
-    <header class="clearfix">
-      {% block topbar %}
 
-      {% endblock %}
-    </header>
     <div class="container">
       <div class="header">
         <ul class="nav nav-pills pull-right">
@@ -148,53 +144,26 @@
           <li><a href="#">About</a></li>
           <li><a href="#">Contact</a></li>
         </ul>
-        <h3 class="text-muted">FAD Study</h3>
+        <h3 class="text-muted">The FAD Study</h3>
       </div>
 
       <div class="jumbotron">
-        <h1>FAD Study</h1>
+        <h1>{{ date }}
+        <h1>Facebook use in Affective Disorders</h1>
         <p class="lead">The FAD study – Facebook use in affective disorders - aims to analyze if the use of social media sites such as Facebook, changes just before people with bipolar disorder relapse with a manic or depressive episode.</p>
-
-
         <p><a class="btn btn-lg btn-facebook" href="#"><i class="icon-facebook"></i> | Sign up with Facebook</a></p>
       </div>
 
       <div class="footer">
         <p>&copy; The FAD Study 2013</p>
       </div>
+      <header class="clearfix">
+        {% block topbar %}
 
+        {% endblock %}
+      </header>
     </div> <!-- /container -->
 
 
-    <!-- <section id="get-started">
-      <p>Welcome to your Facebook app, running on
-      <span>heroku</span>!</p>
-      <a class="button" href="https://devcenter.heroku.com/articles/facebook">Learn How to Edit This App</a>
-    </section>
-    {% block content%}
-    {% endblock %}
-    <section class="clearfix" id="guides">
-      <h1>Learn More About Heroku &amp; Facebook Apps</h1>
-      <ul>
-        <li>
-          <a class="icon heroku" href="https://www.heroku.com/" target="_top">Heroku</a>
-          <p>Learn more about
-          <a href="https://www.heroku.com/" target="_top">Heroku</a>, or read developer docs in the Heroku
-          <a href="https://devcenter.heroku.com/" target="_top">Dev Center</a>.</p>
-        </li>
-        <li>
-          <a class="icon websites" href="https://developers.facebook.com/docs/guides/web/" target="_top">Websites</a>
-          <p>Drive growth and engagement on your site with Facebook Login and Social Plugins.</p>
-        </li>
-        <li>
-          <a class="icon mobile-apps" href="https://developers.facebook.com/docs/guides/mobile/" target="_top">Mobile Apps</a>
-          <p>Integrate with our core experience by building apps that operate within Facebook.</p>
-        </li>
-        <li>
-          <a class="icon apps-on-facebook" href="https://developers.facebook.com/docs/guides/canvas/" target="_top">Apps on Facebook</a>
-          <p>Let users find and connect to their friends in mobile apps and games.</p>
-        </li>
-      </ul>
-    </section> -->
   </body>
 </html>
