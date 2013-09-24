@@ -170,6 +170,7 @@ def get_token():
 def index():
     # print get_home()
 
+    date = datetime.datetime.now().strftime('%A, %d %B')
 
     access_token = get_token()
     channel_url = url_for('get_channel', _external=True)
@@ -201,8 +202,6 @@ def index():
                    % (redir, FB_APP_ID, get_home()))
 
         url = request.url
-
-        date = datetime.datetime.now().strftime('%A, %d %B')
 
         return render_template(
             'index.html', app_id=FB_APP_ID, token=access_token, likes=likes,
