@@ -1,17 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:fb="http://ogp.me/ns/fb#" lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes" />
-
-    <!-- We get the name of the app out of the information fetched -->
-    <title>{{ name }}</title>
-    <link rel="stylesheet" href="static/screen.css" media="Screen" type="text/css" />
-    <link rel="stylesheet" href="static/mobile.css" media="handheld, only screen and (max-width: 480px), only screen and (max-device-width: 480px)" type="text/css" />
-
-    <!--[if IEMobile]>
-      <link rel="stylesheet" href="static/mobile.css" media="screen" type="text/css"  />
-    <![endif]-->
+    <!-- Meta content -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A Study of Facebook use in Affective Disorders">
+    <meta name="author" content="RMIT University">
 
     <!-- These are Open Graph tags.  They add meta data to your  -->
     <!-- site that facebook uses when your content is shared     -->
@@ -26,8 +20,24 @@
     <meta property="og:description" content="My First App" />
     <meta content="{{app_id}}" property="fb:app_id" />
 
-    <script type="text/javascript" src="/static/jquery-1.7.1.min.js"></script>
-       <script type="text/javascript">
+    <!-- We get the name of the app out of the information fetched -->
+    <title>{{ name }}</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="static/css/social-buttons-3.css">
+    <link rel="stylesheet" href="static/css/font-awesome.min.css">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="static/javascript/html5shiv.js"></script>
+      <script src="static/javascript/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Scripts -->
+    <script src="jquery.min.js"></script>
+    <script type="text/javascript">
       function logResponse(response) {
         if (console && console.log) {
           console.log('The response was', response);
@@ -90,7 +100,6 @@
           document.createElement(tags.pop());
       </script>
     <![endif]-->
-
   </head>
   <body>
       <script type="text/javascript">
@@ -132,7 +141,32 @@
 
       {% endblock %}
     </header>
-    <section id="get-started">
+    <div class="container">
+      <div class="header">
+        <ul class="nav nav-pills pull-right">
+          <li class="active"><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+        <h3 class="text-muted">FAD Study</h3>
+      </div>
+
+      <div class="jumbotron">
+        <h1>FAD Study</h1>
+        <p class="lead">The FAD study – Facebook use in affective disorders - aims to analyze if the use of social media sites such as Facebook, changes just before people with bipolar disorder relapse with a manic or depressive episode.</p>
+
+
+        <p><a class="btn btn-lg btn-facebook" href="#"><i class="icon-facebook"></i> | Sign up with Facebook</a></p>
+      </div>
+
+      <div class="footer">
+        <p>&copy; The FAD Study 2013</p>
+      </div>
+
+    </div> <!-- /container -->
+
+
+    <!-- <section id="get-started">
       <p>Welcome to your Facebook app, running on
       <span>heroku</span>!</p>
       <a class="button" href="https://devcenter.heroku.com/articles/facebook">Learn How to Edit This App</a>
@@ -161,6 +195,6 @@
           <p>Let users find and connect to their friends in mobile apps and games.</p>
         </li>
       </ul>
-    </section>
+    </section> -->
   </body>
 </html>
