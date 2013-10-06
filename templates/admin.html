@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:fb="http://ogp.me/ns/fb#" lang="en">
+  <head>
+    <!-- Meta content -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A Study of Facebook use in Affective Disorders">
+    <meta name="author" content="RMIT University">
+
+    <!-- These are Open Graph tags.  They add meta data to your  -->
+    <!-- site that facebook uses when your content is shared     -->
+    <!-- over facebook.  You should fill these tags in with      -->
+    <!-- your data.  To learn more about Open Graph, visit       -->
+    <!-- 'https://developers.facebook.com/docs/opengraph/'       -->
+    <meta content="" property="og:title" />
+    <meta content="" property="og:type" />
+    <meta content="" property="og:url" />
+    <meta content="" property="og:image" />
+    <meta content="" property="og:site_name" />
+    <meta property="og:description" content="My First App" />
+    <meta content="{{app_id}}" property="fb:app_id" />
+
+    <!-- We get the name of the app out of the information fetched -->
+    <title>{{ name }}</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/social-buttons-3.css">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="static/javascript/html5shiv.js"></script>
+      <script src="static/javascript/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Scripts -->
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  </head>
+  <body>
+
+      <script type="text/javascript">
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '{{ app_id }}', // App ID
+          // channelUrl : '{{ channel_url }}', // Channel File
+          status     : true, // check login status
+          cookie     : true, // enable cookies to allow the server to access the session
+          xfbml      : true // parse XFBML
+        });
+
+        // Listen to the auth.login which will be called when the user logs in
+        // using the Login button
+        FB.Event.subscribe('auth.login', function(response) {
+          // We want to reload the page now so Ruby can read the cookie that the
+          // Javascript SDK sat. But we don't want to use
+          // window.location.reload() because if this is in a canvas there was a
+          // post made to this page and a reload will trigger a message to the
+          // user asking if they want to send data again.
+          window.location = window.location;
+        });
+
+        FB.Canvas.setAutoGrow();
+      };
+
+      // Load the SDK Asynchronously
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/all.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+    <div class="container">
+      <header>
+        <div class="header">
+                <ul class="nav nav-pills pull-right">
+                    <li style='margin-top: 12px;'>
+                      Logged in as <a style='padding: 0px; display:inline;' href='http://facebook.com/{{ me["id"] }}'>{{ me['name'] }}</a>
+                    </li>
+                    <li style='margin-top: 2px; margin-left: 2px; color: black;'>
+                      <a href="#" style='color: black;'>
+                        <span class="glyphicon glyphicon-log-out"></span>
+                      </a>
+                    </li>
+                </ul>
+            <h3 class="text-muted" style='font-weight: 100;'>
+              The FAD Study
+            </h3>
+        </div>
+      </header>
+
+      <section id='user-list'>
+        <div class="row">
+          <div class="col-md-12">
+            <h3 style='font-weight: 100;'>
+              Users
+            </h3>
+            <table class='table'>
+              <thead>
+                <tr>
+                  <th>Facebook Id</th>
+                  <th>Last log in</th>
+                  <th>Latest mood</th>
+                  <th>Answer rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>535722798</td>
+                  <td>2013-10-06 11:26:55.713746</td>
+                  <td>7</td>
+                  <td>84 %</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">
+        <p>&copy; The FAD Study 2013</p>
+      </div>
+    </div> <!-- /container -->
+  </body>
+</html>

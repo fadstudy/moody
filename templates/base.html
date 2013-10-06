@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
     <link rel="stylesheet" href="static/css/style.css">
     <link rel="stylesheet" href="static/css/social-buttons-3.css">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -138,24 +139,97 @@
 
 
     <div class="container">
-      <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li class="active"><a href="#">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-        <h3 class="text-muted">The FAD Study</h3>
-      </div>
 
-      <div>
+
       {% block topbar %}
 
       {% endblock %}
-      </div>
 
-      <div class="footer">
+
+      <!-- <section id='enrolment'>
+        <form class="form-horizontal">
+        <fieldset>
+
+        <legend>Sign up</legend>
+
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="first-name-text">First name</label>
+          <div class="col-md-5">
+          <input id="first-name-text" name="first-name-text" type="text" placeholder="First name" class="form-control input-md" required="">
+
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="last-name-text">Last name</label>
+          <div class="col-md-5">
+          <input id="last-name-text" name="last-name-text" type="text" placeholder="Last name" class="form-control input-md" required="">
+
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="age-text">Age</label>
+          <div class="col-md-5">
+          <input id="age-text" name="age-text" type="text" placeholder="Your age" class="form-control input-md" required="">
+          <span class="help-block">Numbers only</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="email-text">Email</label>
+          <div class="col-md-5">
+          <input id="email-text" name="email-text" type="text" placeholder="Email address" class="form-control input-md" required="">
+
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="signature-text">Signature</label>
+          <div class="col-md-6">
+          <input id="signature-text" name="signature-text" type="text" placeholder="Full name" class="form-control input-md" required="">
+          <span class="help-block">Type your full name</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="confirm-checks">Confirm</label>
+          <div class="col-md-4">
+          <div class="checkbox">
+            <label for="confirm-checks-0">
+              <input type="checkbox" name="confirm-checks" id="confirm-checks-0" value="1">
+              Diagnosis
+            </label>
+          </div>
+          <div class="checkbox">
+            <label for="confirm-checks-1">
+              <input type="checkbox" name="confirm-checks" id="confirm-checks-1" value="2">
+              Age
+            </label>
+          </div>
+          <div class="checkbox">
+            <label for="confirm-checks-2">
+              <input type="checkbox" name="confirm-checks" id="confirm-checks-2" value="3">
+              Privacy
+            </label>
+          </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="signup-submit">Enroll in study</label>
+          <div class="col-md-4">
+            <button id="signup-submit" name="signup-submit" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+
+        </fieldset>
+        </form>
+      </section> -->
+
+      <footer class="footer" style='margin-top: 50px;'>
         <p>&copy; The FAD Study 2013</p>
-      </div>
+      </footer>
     </div> <!-- /container -->
 
 

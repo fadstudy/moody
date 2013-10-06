@@ -33,6 +33,7 @@ def oauth_login_url(preserve_path=True, next_url=None):
 
     if app.config['FBAPI_SCOPE']:
         fb_login_uri += "&scope=%s" % ",".join(app.config['FBAPI_SCOPE'])
+
     return fb_login_uri
 
 
@@ -84,10 +85,18 @@ def fbapi_auth(code):
 
 
 def fbapi_get_application_access_token(id):
+    # token = fbapi_get_string(
+    #     path=u"/oauth/access_token",
+    #     params=dict(grant_type=u'client_credentials', client_id=id,
+    #                 client_secret=app.config['FB_APP_SECRET']),
+    #     domain=u'graph')
+
     token = fbapi_get_string(
         path=u"/oauth/access_token",
-        params=dict(grant_type=u'client_credentials', client_id=id,
-                    client_secret=app.config['FB_APP_SECRET']),
+        params=dict(grant_type=u'client_credentials',
+                    client_id=id,
+                    client_secret=app.config['FB_APP_SECRET'],
+                    access_token='CAAHFoqCfSWoBAAVb4ICZAhiZAKMk46QMo6ESHQFhx3XHHKiVBr6XiPsgvsmmZB4k4KUJDA4uySf0JrtcjnujdsZBZBCyhCRkHtl3dOu8bnKCNg0DPBoJy8JL7t5tUdXAHxz4TZC0W0ZBbMVZCkrgdquqCJiDBaTIiEExfiu0ExTOfMNZBrlmxk50K5s88697rBTfnZCwqEhkLxTgZDZD'),
         domain=u'graph')
 
     token = token.split('=')[-1]
@@ -165,10 +174,46 @@ def get_token():
 
         return token
 
+@app.route('/admin/', methods=['GET'])
+def admin():
+    # app_access_token = fbapi_get_application_access_token('mitchl.stewart')
+
+    # print 'APP ACCESS TOKEN: ', app_access_token
+
+    # payload = {'access_token' : app_access_token,
+    #           'href' : 'https://apps.facebook.com/thefadstudy/',
+    #           'template' : 'Hey, time to rate your mood for today!'}
+
+    # r = requests.post('https://graph.facebook.com/' + 'mitchl.stewart' + '/notifications', params=payload)
+
+    # print r.url
+    # print r.text
+    access_token = get_token()
+
+    print access_token
+
+    if access_token:
+        me = fb_call('me', args={'access_token': access_token})
+        return render_template('admin.html', name=FB_APP_NAME, me=me)
+
+    return redirect('/')
+
+@app.route('/admin/users/<int:route_id>', methods=['GET'])
+def user(id):
+    pass
+
+def extend_token(client_id, short_term_token):
+    payload = {'grant_type': 'fb_exchange_token',
+               'client_id': app.config['FB_APP_ID'],
+               'client_secret': app.config['FB_APP_SECRET'],
+               'fb_exchange_token': short_term_token}
+
+    result = requests.get('https://graph.facebook.com/oauth/access_token', params=payload).content
+
+    return result
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    # print get_home()
 
     date = datetime.datetime.now().strftime('%A, %d %B')
 
@@ -179,23 +224,39 @@ def index():
     if access_token:
 
         me = fb_call('me', args={'access_token': access_token})
+
+        # print extend_token(me['id'], access_token)
+
+        # flag = False
+        # with open('users.txt', 'rt') as _file:
+        #     next(_file)
+        #     for line in _file:
+        #         fields = line.split(',')
+        #         if me['id'] == fields[0]:
+        #             flag = True
+
+        # if flag is False:
+        #     fields = [me['id'], access_token[0], datetime.datetime.now(), datetime.datetime.now(), False]
+        #     with open('users.txt', 'a') as _file:
+        #         _file.write(','.join(str(field) for field in fields))
+
         fb_app = fb_call(FB_APP_ID, args={'access_token': access_token})
-        likes = fb_call('me/likes',
-                        args={'access_token': access_token, 'limit': 4})
-        friends = fb_call('me/friends',
-                          args={'access_token': access_token, 'limit': 4})
-        photos = fb_call('me/photos',
-                         args={'access_token': access_token, 'limit': 16})
+        # likes = fb_call('me/likes',
+        #                 args={'access_token': access_token, 'limit': 4})
+        # friends = fb_call('me/friends',
+        #                   args={'access_token': access_token, 'limit': 4})
+        # photos = fb_call('me/photos',
+        #                  args={'access_token': access_token, 'limit': 16})
 
         redir = get_home() + 'close/'
         POST_TO_WALL = ("https://www.facebook.com/dialog/feed?redirect_uri=%s&"
                         "display=popup&app_id=%s" % (redir, FB_APP_ID))
 
-        app_friends = fql(
-            "SELECT uid, name, is_app_user, pic_square "
-            "FROM user "
-            "WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND "
-            "  is_app_user = 1", access_token)
+        # app_friends = fql(
+        #     "SELECT uid, name, is_app_user, pic_square "
+        #     "FROM user "
+        #     "WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND "
+        #     "  is_app_user = 1", access_token)
 
         SEND_TO = ('https://www.facebook.com/dialog/send?'
                    'redirect_uri=%s&display=popup&app_id=%s&link=%s'
@@ -203,11 +264,12 @@ def index():
 
         url = request.url
 
+        print str(access_token[0])
+
         return render_template(
-            'index.html', app_id=FB_APP_ID, token=access_token, likes=likes,
-            friends=friends, photos=photos, app_friends=app_friends, app=fb_app,
+            'index.html', app_id=FB_APP_ID, token=access_token, app=fb_app,
             me=me, POST_TO_WALL=POST_TO_WALL, SEND_TO=SEND_TO, url=url,
-            channel_url=channel_url, name=FB_APP_NAME, date=date)
+            channel_url=channel_url, name=FB_APP_NAME, date=date, chungus=str(access_token[0]))
     else:
         return render_template('login.html', app_id=FB_APP_ID, token=access_token, url=request.url, channel_url=channel_url, name=FB_APP_NAME, date=date)
 
