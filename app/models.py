@@ -20,7 +20,7 @@ class User(db.Model):
     tokens = db.relationship('Token')
 
     def get_access_token(self):
-        return tokens[0].access_token
+        return self.tokens[0].access_token
 
     def created_date_formatted(self):
         return self.created_date.strftime('%A, %B %d')
