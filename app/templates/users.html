@@ -70,7 +70,7 @@
       window.fbAsyncInit = function() {
         FB.init({
           appId      : '{{ app_id }}', // App ID
-          // channelUrl : '{{ channel_url }}', // Channel File
+          channelUrl : '{{ channel_url }}', // Channel File
           status     : true, // check login status
           cookie     : true, // enable cookies to allow the server to access the session
           xfbml      : true // parse XFBML
@@ -84,7 +84,7 @@
           // window.location.reload() because if this is in a canvas there was a
           // post made to this page and a reload will trigger a message to the
           // user asking if they want to send data again.
-          window.location = window.location;
+          window.location = window.location.reload();
         });
 
         FB.Canvas.setAutoGrow();
@@ -136,7 +136,8 @@
             </h4>
             <ul class="nav nav-pills pull-right">
               <li>
-                <a class='nav-link' style='color: black;' data-toggle="tooltip" title="Access token">
+                <a id='access-token-link' class='nav-link' href='#' style='color: black;'
+                   data-toggle="tooltip" title="Access token">
                   <i class="icon-key icon-large"></i>
                 </a>
               </li>
@@ -237,7 +238,9 @@
         'selector': '',
         'placement': 'bottom'
       });
-
+      $('#access-token-link').click(function () {
+        alert({{ user.get_access_token() }})
+      });
     });
     </script>
   </body>
