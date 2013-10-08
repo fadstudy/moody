@@ -25,6 +25,12 @@ class User(db.Model):
     def last_login_formatted(self):
         return self.last_visit.strftime('%A, %B %d')
 
+    def latest_mood(self):
+        latest_mood = self.moods[-1]
+        if latest_mood.time_stamp.date() == datetime.utcnow().date():
+            return True
+        return False
+
     def average_mood(self):
         total_rating = 0
         for mood in self.moods:

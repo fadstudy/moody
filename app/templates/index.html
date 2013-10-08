@@ -6,15 +6,26 @@
   <div class="header">
           <ul class="nav nav-pills pull-right">
               <li style='margin-top: 12px;'>
-                Logged in as <a style='padding: 0px; display:inline;' href='http://facebook.com/{{ me["id"] }}'>{{ me['name'] }}</a>
+                <a style='padding: 0px; display:inline; hover: none;' href='http://facebook.com/{{ me["id"] }}'>{{ me['name'] }}</a>
               </li>
+              {% if user.role == 1 %}
               <li style='margin-top: 2px; margin-left: 2px; color: black;'>
-                <a href="#" style='color: black;'>
-                  <span class="glyphicon glyphicon-log-out"></span>
+                <a class='nav-link' href="/admin/" style='color: black;'
+                   data-toggle="tooltip" title="Admin">
+                  <i class="icon-lock icon-large"></i>
+                </a>
+              </li>
+              {% endif %}
+              <li style='margin-top: 2px; margin-left: 2px; color: black;'>
+                <a class='nav-link' href="#" style='color: black;'
+                   data-toggle="tooltip" title="Log out">
+                  <i class="icon-signout icon-large"></i>
                 </a>
               </li>
           </ul>
-      <h3 class="text-muted" style='font-weight: 100;'>The FAD Study</h3>
+      <h3 id='logo' style='font-weight: 100; padding-bottom: 4px;'>
+        <a class="text-muted" href="/">The FAD Study</a>
+      </h3>
   </div>
 </header>
 
@@ -32,6 +43,7 @@
             padding-left: -; margin-left: 115px;">
             Hi, {{ me['first_name'] }}
           </h3>
+          {% if user.latest_mood() == False %}
           <h5 id='sub-message' class='text-muted' style="
               margin-top: 15px;
               padding-top: 0px;
@@ -39,19 +51,29 @@
               padding-left: -;
               margin-left: 115px;
           ">Please record your response for {{ date }}</h5>
+          {% else %}
+          <h5 id='sub-message' class='text-muted' style="
+              margin-top: 15px;
+              padding-top: 0px;
+              padding-left: 1px;
+              padding-left: -;
+              margin-left: 115px;
+          ">We'll notify you when to rate your mood again.</h5>
+          {% endif %}
         </div>
       </div>
     </section>
 
+    {% if user.latest_mood() == False %}
     <section id="response">
       <div class="row" style='margin-top: 40px;'>
         <div class="col-md-12">
-          <form class="form-horizontal" style='margin-left: 10px;'>
+          <form id='mood-form' class="form-horizontal" style='margin-left: 10px;' action="/moods/" method="post">
             <fieldset>
             <legend style="padding-left: 20px;">
               {{ date }}
             </legend>
-
+            <input type='hidden' name='user-id' id='user-id' value='{{ me['id'] }}'>
             <div style='margin-left: 15px;'>
               <!-- Multiple Radios (inline) -->
               <label style='padding-left: 0px; padding-right: 0px; text-align: left;' class="col-md-12 control-label" for="mood-radio">What would you rate your mood out of 10?</label>
@@ -155,8 +177,9 @@
         </div>
       </div>
     </section>
-
-  <div id='response'>
+  {% else %}
+  <h4 style="margin-top: 20px;">Thanks, we have recorded your response for today.</h4>
+  {% endif %}
 
     <!-- <h1>Welcome, <strong>{{me.name}}</strong></h1>
     <p class="tagline">
@@ -183,17 +206,6 @@
         </li>
       </ul>
     </div> -->
-  </div>
   </section>
-  <script>
-  $(function(){
-    $('#submit-button').click(function(){
-      // $('.form-horizontal').hide();
-      // $('#response').html('<h4 style="margin-top: 20px;">Thanks, we have recorded your response for today.</h4>');
-      // $('#sub-message').html('We\'ll notify you when to rate your mood again.');
-      // return false;
-    });
-  });
-  </script>
 
 {% endblock %}

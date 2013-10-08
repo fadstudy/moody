@@ -195,8 +195,11 @@ def admin():
     if is_admin(access_token) == True:
         query = db.session.query(User)
         users = query.all()
+
         me = fb_call('me', args={'access_token': access_token})
-        return render_template('admin.html', name=FB_APP_NAME, me=me, users=users)
+        query = db.session.query(User).filter(User.facebook_id == me['id'])
+        user = query.first()
+        return render_template('admin.html', name=FB_APP_NAME, me=me, users=users, user=user)
     else:
         return redirect('/')
 
@@ -225,6 +228,20 @@ def extend_token(client_id, short_term_token):
     result = requests.get('https://graph.facebook.com/oauth/access_token', params=payload).content
 
     return result.split('=')[1].split('&')[0]
+
+@app.route('/moods/', methods=['POST'])
+def submit_mood():
+    mood = request.form['mood-radio']
+    user_id = request.form['user-id']
+
+    query = db.session.query(User).filter(User.facebook_id == user_id)
+    user = query.first()
+    user.moods.append(
+        Mood(rating=mood)
+    )
+    db.session.commit()
+
+    return redirect('/')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -299,7 +316,7 @@ def index():
         return render_template(
             'index.html', app_id=FB_APP_ID, token=access_token, app=fb_app,
             me=me, POST_TO_WALL=POST_TO_WALL, SEND_TO=SEND_TO, url=url,
-            channel_url=channel_url, name=FB_APP_NAME, date=date, chungus=str(access_token[0]))
+            channel_url=channel_url, name=FB_APP_NAME, date=date, chungus=str(access_token[0]), user=user)
     else:
         return render_template('login.html', app_id=FB_APP_ID, token=access_token, url=request.url, channel_url=channel_url, name=FB_APP_NAME, date=date)
 
