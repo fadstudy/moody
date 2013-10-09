@@ -57,7 +57,13 @@ class User(db.Model):
         if moods == 0:
             moods = 1
 
-        return '{0:.3g}'.format((moods / float(delta.days)) * 100)
+        days = delta.days
+        if days == 0:
+            days = 1
+
+
+
+        return '{0:.3g}'.format((moods / float(days)) * 100)
 
     def __repr__(self):
         return '<User {0}>'.format(self.id)
