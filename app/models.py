@@ -35,7 +35,7 @@ class User(db.Model):
                 return True
             return False
         except IndexError:
-            lastest_mood = None
+            return False
 
     def average_mood(self):
         total_rating = 0
