@@ -29,10 +29,13 @@ class User(db.Model):
         return self.last_visit.strftime('%A, %B %d')
 
     def latest_mood(self):
-        latest_mood = self.moods[-1]
-        if latest_mood.time_stamp.date() == datetime.utcnow().date():
-            return True
-        return False
+        try:
+            latest_mood = self.moods[-1]
+            if latest_mood.time_stamp.date() == datetime.utcnow().date():
+                return True
+            return False
+        except IndexError:
+            lastest_mood = None
 
     def average_mood(self):
         total_rating = 0
