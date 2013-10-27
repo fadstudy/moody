@@ -8,7 +8,7 @@ learning purposes.
 Subjects can fill out a daily survey based around their mood.
 
 ### Log in with Facebook
-When subjects log in with Facebook, they give the application permission to,
+When subjects log in with Facebook, they give the application permission to
 access their Facebook feed.  Through this, we can collect data to analyse.
 
 ### Admin
