@@ -15,17 +15,16 @@ from flask import Flask, request, redirect, render_template, url_for
 from app import app, db
 from models import User, Mood, Token
 
-# TODO: Remove hardcoded ID
-FB_APP_ID = 498777246878058
-# FB_APP_ID = os.environ.get('FACEBOOK_APP_ID')
+'''
+Set up app variables
+'''
 requests = requests.session()
 
+FB_APP_ID = os.environ.get('FACEBOOK_APP_ID')
 app_url = 'https://graph.facebook.com/{0}'.format(FB_APP_ID)
-FB_APP_NAME = 'The FAD Study'
-# FB_APP_NAME = json.loads(requests.get(app_url).content).get('name')
-# TODO: Remove hardcoded ID
-FB_APP_SECRET = '02272a1ef565d2bbbec38c64e464094f'
-# FB_APP_SECRET = os.environ.get('FACEBOOK_SECRET')
+FB_APP_NAME = json.loads(requests.get(app_url).content).get('name')
+FB_APP_SECRET = os.environ.get('FACEBOOK_SECRET')
+
 
 def oauth_login_url(preserve_path=True, next_url=None):
     fb_login_uri = ("https://www.facebook.com/dialog/oauth"
