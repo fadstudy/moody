@@ -76,6 +76,8 @@ class Mood(db.Model):
     rating = db.Column(db.Integer)
     time_stamp = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    medication = db.Column(db.SmallInteger, default=0)
+    hospital = db.Column(db.SmallInteger, default=0)
 
     def unix_timestamp(self):
         return round(float(self.time_stamp.strftime('%s.%f')), 3)

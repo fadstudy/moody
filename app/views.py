@@ -230,14 +230,19 @@ def extend_token(client_id, short_term_token):
 
 @app.route('/moods/', methods=['POST'])
 def submit_mood():
-    mood = request.form['mood-radio']
-    user_id = request.form['user-id']
+
+    if request.form['mood-radio'].isdigit(): mood = request.form['mood-radio']
+    if request.form['medication-radio'].isdigit(): medication = \
+       request.form['medication-radio']
+    if request.form['hospital-radio'].isdigit(): hospital = \
+       request.form['hospital-radio']
+    if request.form['user-id'].isdigit(): user_id = \
+       request.form['user-id']
 
     query = db.session.query(User).filter(User.facebook_id == user_id)
     user = query.first()
-    user.moods.append(
-        Mood(rating=mood)
-    )
+    user.moods.append(Mood(rating=mood, medication=medication,
+                           hospital=hospital))
     db.session.commit()
 
     return redirect('/')
