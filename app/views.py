@@ -1,5 +1,5 @@
 
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import facebook
 from flask import redirect, render_template, request, url_for
@@ -96,6 +96,7 @@ def admin():
             users = query.all()
 
             return render_template('admin.html', name=FACEBOOK_APP_NAME,
+                                    app_id=FACEBOOK_APP_ID,
                                    me=profile, users=users, user=user)
         else:
             return redirect('/')
@@ -112,7 +113,8 @@ def admin():
                 users = query.all()
 
                 return render_template('admin.html', name=FACEBOOK_APP_NAME,
-                                       me=profile, users=users, user=user)
+                                       me=profile, users=users, user=user,
+                                       channel_url=channel_url)
 
             except facebook.GraphAPIError as e:
                 print 'FACEBOOK GRAPH API ERROR: ', e
@@ -149,7 +151,8 @@ def user(user_id):
             chungus = query.first()
 
             return render_template('users.html', chungus=chungus, user=user,
-                                   me=profile)
+                                   me=profile, app_id=FACEBOOK_APP_ID,
+                                   channel_url=channel_url)
         else:
             return redirect('/')
     except Exception as e:
@@ -165,7 +168,8 @@ def user(user_id):
                 chungus = query.first()
 
                 return render_template('users.html', chungus=chungus, user=user,
-                                       me=profile)
+                                       me=profile, app_id=FACEBOOK_APP_ID,
+                                       channel_url=channel_url)
 
             except facebook.GraphAPIError as e:
                 print 'FACEBOOK GRAPH API ERROR: ', e

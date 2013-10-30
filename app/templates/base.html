@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:fb="http://ogp.me/ns/fb#" lang="en">
-  <head>
+<head>
     <!-- Meta content -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,62 +44,6 @@
     <script src='/static/javascript/cal-heatmap.js'></script>
     <script src='/static/javascript/moment.min.js'></script>
 
-    <script type="text/javascript">
-      function logResponse(response) {
-        if (console && console.log) {
-          console.log('The response was', response);
-        }
-      }
-
-      $(function(){
-        // Set up so we handle click on the buttons
-        $('#postToWall').click(function() {
-          FB.ui(
-            {
-              method : 'feed',
-              link   : $(this).attr('data-url')
-            },
-            function (response) {
-              // If response is null the user canceled the dialog
-              if (response != null) {
-                logResponse(response);
-              }
-            }
-          );
-        });
-
-        $('#sendToFriends').click(function() {
-          FB.ui(
-            {
-              method : 'send',
-              link   : $(this).attr('data-url')
-            },
-            function (response) {
-              // If response is null the user canceled the dialog
-              if (response != null) {
-                logResponse(response);
-              }
-            }
-          );
-        });
-
-        $('#sendRequest').click(function() {
-          FB.ui(
-            {
-              method  : 'apprequests',
-              message : $(this).attr('data-message')
-            },
-            function (response) {
-              // If response is null the user canceled the dialog
-              if (response != null) {
-                logResponse(response);
-              }
-            }
-          );
-        });
-      });
-    </script>
-
     <!--[if IE]>
       <script type="text/javascript">
         var tags = ['header', 'section'];
@@ -109,67 +53,62 @@
     <![endif]-->
 
     <style>
-      #logo > a:hover {
-        color: #999;
-        text-decoration: none;
-      }
+        #logo > a:hover {
+            color: #999;
+            text-decoration: none;
+        }
 
-      .nav > li > a {
-        padding-left: 10px;
-        padding-right: 10px;
-      }
+        .nav > li > a {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
 
-      .nav > li > a:hover {
-        text-decoration: none;
-        background-color: white;
-      }
+        .nav > li > a:hover {
+            text-decoration: none;
+            background-color: white;
+        }
 
-      div[class="tooltip-inner"] {
-          max-width: 60px;
-          width: 60px;
-      }
+        div[class="tooltip-inner"] {
+            max-width: 60px;
+            width: 60px;
+        }
     </style>
+</head>
+<body>
+    <script type="text/javascript">
+        window.fbAsyncInit = function() {
+            console.log('Here...');
+            FB.init({
+                appId      : '{{ app_id }}',
+                channelUrl : '{{ channel_url }}',
+                status     : true,
+                cookie     : true,
+                xfbml      : true
+            });
 
-  </head>
-  <body>
-      <script type="text/javascript">
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '{{ app_id }}', // App ID
-          channelUrl : '{{ channel_url }}', // Channel File
-          status     : true, // check login status
-          cookie     : true, // enable cookies to allow the server to access the session
-          xfbml      : true // parse XFBML
-        });
+            FB.Event.subscribe('auth.login', function(response) {
+                window.location = window.location;
+            });
 
-        // Listen to the auth.login which will be called when the user logs in
-        // using the Login button
-        FB.Event.subscribe('auth.login', function(response) {
-          // We want to reload the page now so Ruby can read the cookie that the
-          // Javascript SDK sat. But we don't want to use
-          // window.location.reload() because if this is in a canvas there was a
-          // post made to this page and a reload will trigger a message to the
-          // user asking if they want to send data again.
-          window.location = window.location;
-        });
+            FB.Event.subscribe('auth.logout', function(response) {
+                window.location = window.location;
+            });
 
-        FB.Canvas.setAutoGrow();
-      };
+            FB.Canvas.setAutoGrow();
+        };
 
-      // Load the SDK Asynchronously
-      (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/en_US/all.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
+        // Load the SDK Asynchronously
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/all.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
     </script>
-
 
     <div class="container">
         {% block topbar %}{% endblock %}
-
         <footer class="footer" style='margin-top: 50px;'>
             <p>&copy; The FAD Study 2013</p>
         </footer>
@@ -181,7 +120,13 @@
                 'selector': '',
                 'placement': 'bottom'
             });
+
+            $('#log-out').click(function() {
+                console.log('clicked...')
+                FB.logout(function(response) { });
+                return false;
+            });
         });
     </script>
-  </body>
+</body>
 </html>

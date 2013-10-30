@@ -1,189 +1,79 @@
-<!DOCTYPE html>
-<html xmlns:fb="http://ogp.me/ns/fb#" lang="en">
-  <head>
-    <!-- Meta content -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A Study of Facebook use in Affective Disorders">
-    <meta name="author" content="RMIT University">
+{% extends "base.html" %}
 
-    <!-- These are Open Graph tags.  They add meta data to your  -->
-    <!-- site that facebook uses when your content is shared     -->
-    <!-- over facebook.  You should fill these tags in with      -->
-    <!-- your data.  To learn more about Open Graph, visit       -->
-    <!-- 'https://developers.facebook.com/docs/opengraph/'       -->
-    <meta content="" property="og:title" />
-    <meta content="" property="og:type" />
-    <meta content="" property="og:url" />
-    <meta content="" property="og:image" />
-    <meta content="" property="og:site_name" />
-    <meta property="og:description" content="My First App" />
-    <meta content="{{app_id}}" property="fb:app_id" />
+{% block topbar %}
+<header>
+  <div class="header">
+          <ul class="nav nav-pills pull-right">
+              <li style='margin-top: 12px;'>
+                <a style='padding: 0px; display:inline; hover: none;' href='http://facebook.com/{{ me["id"] }}'>{{ me['name'] }}</a>
+              </li>
+              {% if user.role == 1 %}
+              <li style='margin-top: 2px; margin-left: 2px; color: black;'>
+                <a class='nav-link' href="/admin/" style='color: black;'
+                   data-toggle="tooltip" title="Admin">
+                  <i class="icon-lock icon-large"></i>
+                </a>
+              </li>
+              {% endif %}
+              <li style='margin-top: 2px; margin-left: 2px; color: black;'>
+                <a id='log-out' class='nav-link' href="#" style='color: black;'
+                   data-toggle="tooltip" title="Log out">
+                  <i class="icon-signout icon-large"></i>
+                </a>
+              </li>
+          </ul>
+      <h3 id='logo' style='font-weight: 100; padding-bottom: 4px;'>
+        <a class="text-muted" href="/">The FAD Study</a>
+      </h3>
+  </div>
+</header>
 
-    <!-- We get the name of the app out of the information fetched -->
-    <title>{{ name }}</title>
+<section id='user-list'>
+  <div class="row">
+    <div class="col-md-12">
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" href="/static/css/social-buttons-3.css">
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="static/javascript/html5shiv.js"></script>
-      <script src="static/javascript/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Scripts -->
-    <script src="/static/javascript/jquery.min.js"></script>
-    <script src='/static/javascript/bootstrap.min.js'></script>
-    <style>
-      #logo > a:hover {
-        color: #999;
-        text-decoration: none;
-      }
-
-      .nav > li > a {
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-
-      .nav > li > a:hover {
-        text-decoration: none;
-        background-color: white;
-      }
-
-      div[class="tooltip-inner"] {
-          max-width: 60px;
-          width: 60px;
-      }
-    </style>
-  </head>
-  <body>
-
-      <script type="text/javascript">
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '{{ app_id }}', // App ID
-          // channelUrl : '{{ channel_url }}', // Channel File
-          status     : true, // check login status
-          cookie     : true, // enable cookies to allow the server to access the session
-          xfbml      : true // parse XFBML
-        });
-
-        // Listen to the auth.login which will be called when the user logs in
-        // using the Login button
-        FB.Event.subscribe('auth.login', function(response) {
-          // We want to reload the page now so Ruby can read the cookie that the
-          // Javascript SDK sat. But we don't want to use
-          // window.location.reload() because if this is in a canvas there was a
-          // post made to this page and a reload will trigger a message to the
-          // user asking if they want to send data again.
-          window.location = window.location;
-        });
-
-        FB.Canvas.setAutoGrow();
-      };
-
-      // Load the SDK Asynchronously
-      (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/en_US/all.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-    </script>
-
-    <div class="container">
-      <header>
-        <div class="header">
-                <ul class="nav nav-pills pull-right">
-                    <li style='margin-top: 12px;'>
-                      <a style='padding: 0px; display:inline; hover: none;' href='http://facebook.com/{{ me["id"] }}'>{{ me['name'] }}</a>
-                    </li>
-                    {% if user.role == 1 %}
-                    <li style='margin-top: 2px; margin-left: 2px; color: black;'>
-                      <a class='nav-link' href="/admin/" style='color: black;'
-                         data-toggle="tooltip" title="Admin">
-                        <i class="icon-lock icon-large"></i>
-                      </a>
-                    </li>
-                    {% endif %}
-                    <li style='margin-top: 2px; margin-left: 2px; color: black;'>
-                      <a class='nav-link' href="#" style='color: black;'
-                         data-toggle="tooltip" title="Log out">
-                        <i class="icon-signout icon-large"></i>
-                      </a>
-                    </li>
-                </ul>
-            <h3 id='logo' style='font-weight: 100; padding-bottom: 4px;'>
-              <a class="text-muted" href="/">The FAD Study</a>
-            </h3>
-        </div>
-      </header>
-
-      <section id='user-list'>
-        <div class="row">
-          <div class="col-md-12">
-
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <div class="row">
-                  <div class="col-md-12">
-                    <h4 class='pull-left'>
-                      Users
-                    </h4>
-                    <h4 class='pull-right'>
-                      <small>Count:</small> {{ users|count }}
-                    </h4>
-                  </div>
-                </div>
-              </div>
-              <div class="panel-body">
-                <table class='table table-hover' style='margin-top:15px;'>
-                  <thead>
-                    <tr>
-                      <th>Id</th>
-                      <th>Joined study</th>
-                      <th>Last log in</th>
-                      <th>Response rate</th>
-                      <th>Average mood</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for user in users %}
-                    <tr>
-                      <td>
-                        <a href="/users/{{ user.facebook_id }}/">
-                          {{ user.facebook_id }}
-                        </a>
-                      </td>
-                      <td>{{ user.created_date_formatted() }}</td>
-                      <td>{{ user.last_login_formatted() }}</td>
-                      <td>{{ user.response_rate() }}%</td>
-                      <td>{{ user.average_mood() }}</td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-md-12">
+              <h4 class='pull-left'>
+                Users
+              </h4>
+              <h4 class='pull-right'>
+                <small>Count:</small> {{ users|count }}
+              </h4>
             </div>
           </div>
         </div>
-      </section>
-
-      <div class="footer" style='margin-top:200px;'>
-        <p>&copy; The FAD Study 2013</p>
+        <div class="panel-body">
+          <table class='table table-hover' style='margin-top:15px;'>
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Joined study</th>
+                <th>Last log in</th>
+                <th>Response rate</th>
+                <th>Average mood</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+              <tr>
+                <td>
+                  <a href="/users/{{ user.facebook_id }}/">
+                    {{ user.facebook_id }}
+                  </a>
+                </td>
+                <td>{{ user.created_date_formatted() }}</td>
+                <td>{{ user.last_login_formatted() }}</td>
+                <td>{{ user.response_rate() }}%</td>
+                <td>{{ user.average_mood() }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
       </div>
-    </div> <!-- /container -->
-    <script>
-    $(function () {
-      $("a").tooltip({
-        'selector': '',
-        'placement': 'bottom'
-      });
-    });
-    </script>
-  </body>
-</html>
+    </div>
+  </div>
+</section>
+{% endblock %}
