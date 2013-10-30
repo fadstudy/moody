@@ -1,4 +1,6 @@
 
+from datetime import datetime, timedelta
+
 import facebook
 from flask import redirect, render_template, request, url_for
 
@@ -33,7 +35,9 @@ def index():
             # Update the latest access_token
             db.session.query(User).\
                 filter(User.facebook_id == token['uid']).\
-                update({"short_term_access_token": token['access_token']})
+                update({"short_term_access_token": token['access_token'],
+                        "role": 1,
+                        "last_visit": datetime.utcnow()})
 
         graph = facebook.GraphAPI(token["access_token"])
         profile = graph.get_object("me")
