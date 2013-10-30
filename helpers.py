@@ -1,4 +1,7 @@
 
+from datetime import datetime, timedelta
+from random import randint
+
 from requests import get, post
 
 import config
@@ -49,3 +52,23 @@ def send_notification(user_id, message='Hey, time to rate your mood for today!')
 
     post('https://graph.facebook.com/' + user_id + '/notifications',
          params=payload)
+
+def fake_moods(user_id):
+    db.session.query(models.User).\
+        filter(models.User.id == user_id).\
+        update({"created_date": datetime.utcnow() - timedelta(hours=24*15)})
+    db.session.commit()
+
+    query = db.session.query(models.User).filter(models.User.id == user_id)
+    user = query.first()
+
+    t = user.created_date
+    i = 0
+
+    while i < 12:
+        user.moods.append(
+            models.Mood(rating= randint(1,10), time_stamp=(t + timedelta(hours=24*i)))
+        )
+        i += 1
+
+    db.session.commit()

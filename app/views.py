@@ -97,7 +97,8 @@ def admin():
 
             return render_template('admin.html', name=FACEBOOK_APP_NAME,
                                     app_id=FACEBOOK_APP_ID,
-                                   me=profile, users=users, user=user)
+                                   me=profile, users=users, user=user,
+                                   channel_url=channel_url)
         else:
             return redirect('/')
     except Exception as e:

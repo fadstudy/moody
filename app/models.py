@@ -39,6 +39,20 @@ class User(db.Model):
         except IndexError:
             return False
 
+    def latest_mood_change(self):
+        try:
+            ultimate_mood = self.moods[-1].rating
+            penultimate_mood = self.moods[-2].rating
+
+            difference = ultimate_mood - penultimate_mood
+
+            if difference == 0:
+                return '-'
+            else:
+                return difference
+        except IndexError:
+            return '-'
+
     def average_mood(self):
         total_rating = 0
         for mood in self.moods:

@@ -54,6 +54,7 @@
                 <th>Last log in</th>
                 <th>Response rate</th>
                 <th>Average mood</th>
+                <th>Change in mood</th>
               </tr>
             </thead>
             <tbody>
@@ -68,6 +69,7 @@
                 <td>{{ user.last_login_formatted() }}</td>
                 <td>{{ user.response_rate() }}%</td>
                 <td>{{ user.average_mood() }}</td>
+                <td>{{ user.latest_mood_change() }}</td>
               </tr>
               {% endfor %}
             </tbody>
