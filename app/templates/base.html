@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="/static/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/social-buttons-3.css">
+    <link rel="stylesheet" href="/static/css/cal-heatmap.css">
 
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -39,6 +40,9 @@
     <!-- Scripts -->
     <script src="/static/javascript/jquery.min.js"></script>
     <script src='/static/javascript/bootstrap.min.js'></script>
+    <script src='/static/javascript/d3.v3.min.js'></script>
+    <script src='/static/javascript/cal-heatmap.js'></script>
+    <script src='/static/javascript/moment.min.js'></script>
 
     <script type="text/javascript">
       function logResponse(response) {
@@ -132,7 +136,7 @@
       window.fbAsyncInit = function() {
         FB.init({
           appId      : '{{ app_id }}', // App ID
-          // channelUrl : '{{ channel_url }}', // Channel File
+          channelUrl : '{{ channel_url }}', // Channel File
           status     : true, // check login status
           cookie     : true, // enable cookies to allow the server to access the session
           xfbml      : true // parse XFBML
@@ -164,106 +168,20 @@
 
 
     <div class="container">
+        {% block topbar %}{% endblock %}
 
+        <footer class="footer" style='margin-top: 50px;'>
+            <p>&copy; The FAD Study 2013</p>
+        </footer>
+    </div>
 
-      {% block topbar %}
-
-      {% endblock %}
-
-
-      <!-- <section id='enrolment'>
-        <form class="form-horizontal">
-        <fieldset>
-
-        <legend>Sign up</legend>
-
-        <div class="form-group">
-          <label class="col-md-4 control-label" for="first-name-text">First name</label>
-          <div class="col-md-5">
-          <input id="first-name-text" name="first-name-text" type="text" placeholder="First name" class="form-control input-md" required="">
-
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-md-4 control-label" for="last-name-text">Last name</label>
-          <div class="col-md-5">
-          <input id="last-name-text" name="last-name-text" type="text" placeholder="Last name" class="form-control input-md" required="">
-
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-md-4 control-label" for="age-text">Age</label>
-          <div class="col-md-5">
-          <input id="age-text" name="age-text" type="text" placeholder="Your age" class="form-control input-md" required="">
-          <span class="help-block">Numbers only</span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-md-4 control-label" for="email-text">Email</label>
-          <div class="col-md-5">
-          <input id="email-text" name="email-text" type="text" placeholder="Email address" class="form-control input-md" required="">
-
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-md-4 control-label" for="signature-text">Signature</label>
-          <div class="col-md-6">
-          <input id="signature-text" name="signature-text" type="text" placeholder="Full name" class="form-control input-md" required="">
-          <span class="help-block">Type your full name</span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-md-4 control-label" for="confirm-checks">Confirm</label>
-          <div class="col-md-4">
-          <div class="checkbox">
-            <label for="confirm-checks-0">
-              <input type="checkbox" name="confirm-checks" id="confirm-checks-0" value="1">
-              Diagnosis
-            </label>
-          </div>
-          <div class="checkbox">
-            <label for="confirm-checks-1">
-              <input type="checkbox" name="confirm-checks" id="confirm-checks-1" value="2">
-              Age
-            </label>
-          </div>
-          <div class="checkbox">
-            <label for="confirm-checks-2">
-              <input type="checkbox" name="confirm-checks" id="confirm-checks-2" value="3">
-              Privacy
-            </label>
-          </div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-md-4 control-label" for="signup-submit">Enroll in study</label>
-          <div class="col-md-4">
-            <button id="signup-submit" name="signup-submit" class="btn btn-primary">Submit</button>
-          </div>
-        </div>
-
-        </fieldset>
-        </form>
-      </section> -->
-
-      <footer class="footer" style='margin-top: 50px;'>
-        <p>&copy; The FAD Study 2013</p>
-      </footer>
-    </div> <!-- /container -->
     <script>
-    $(function () {
-      $("a").tooltip({
-        'selector': '',
-        'placement': 'bottom'
-      });
-    });
+        $(function () {
+            $("a").tooltip({
+                'selector': '',
+                'placement': 'bottom'
+            });
+        });
     </script>
-
   </body>
 </html>

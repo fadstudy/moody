@@ -1,6 +1,8 @@
 
 import unittest
 
+from requests import get, post
+
 from app import db, models
 
 # http://www.openp2p.com/pub/a/python/2004/12/02/tdd_pyunit.html
@@ -30,7 +32,14 @@ class UserTests(unittest.TestCase):
 
 class MoodTests(unittest.TestCase):
     def testMoodSubmission(self):
-        pass
+        payload = {'mood-radio' : '2',
+                   'hosptial-radio': '1',
+                   'medication-radio': '1',
+                   'user-id' : '1000'}
+
+        response = post('http://localhost:5001/moods/new', params=payload)
+
+        print response.content
 
     def testMoodValidation(self):
         pass

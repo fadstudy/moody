@@ -15,12 +15,14 @@ class User(db.Model):
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     last_visit = db.Column(db.DateTime, default=datetime.utcnow)
     role = db.Column(db.SmallInteger, default=ROLE_USER)
+    short_term_access_token = db.Column(db.String(512))
 
     moods = db.relationship('Mood')
     tokens = db.relationship('Token')
 
     def get_access_token(self):
-        return self.tokens[0].access_token
+        return self.short_term_access_token
+        # return self.tokens[0].access_token
 
     def created_date_formatted(self):
         return self.created_date.strftime('%A, %B %d')
@@ -76,8 +78,8 @@ class Mood(db.Model):
     rating = db.Column(db.Integer)
     time_stamp = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    medication = db.Column(db.SmallInteger, default=0)
-    hospital = db.Column(db.SmallInteger, default=0)
+    # medication = db.Column(db.SmallInteger, default=0)
+    # hospital = db.Column(db.SmallInteger, default=0)
 
     def unix_timestamp(self):
         return round(float(self.time_stamp.strftime('%s.%f')), 3)

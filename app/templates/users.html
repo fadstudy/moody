@@ -1,247 +1,141 @@
-<!DOCTYPE html>
-<html xmlns:fb="http://ogp.me/ns/fb#" lang="en">
-  <head>
-    <!-- Meta content -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A Study of Facebook use in Affective Disorders">
-    <meta name="author" content="RMIT University">
+{% extends "base.html" %}
 
-    <!-- These are Open Graph tags.  They add meta data to your  -->
-    <!-- site that facebook uses when your content is shared     -->
-    <!-- over facebook.  You should fill these tags in with      -->
-    <!-- your data.  To learn more about Open Graph, visit       -->
-    <!-- 'https://developers.facebook.com/docs/opengraph/'       -->
-    <meta content="" property="og:title" />
-    <meta content="" property="og:type" />
-    <meta content="" property="og:url" />
-    <meta content="" property="og:image" />
-    <meta content="" property="og:site_name" />
-    <meta property="og:description" content="My First App" />
-    <meta content="{{app_id}}" property="fb:app_id" />
+{% block topbar %}
 
-    <!-- We get the name of the app out of the information fetched -->
-    <title>{{ name }}</title>
+<header>
+<div class="header">
+  <ul class="nav nav-pills pull-right">
+      <li style='margin-top: 12px;'>
+        <a style='padding: 0px; display:inline; hover: none;' href='http://facebook.com/{{ me["id"] }}'>{{ me['name'] }}</a>
+      </li>
+      {% if chungus.role == 1 %}
+      <li style='margin-top: 2px; margin-left: 2px; color: black;'>
+        <a class='nav-link' href="/admin/" style='color: black;'
+           data-toggle="tooltip" title="Admin">
+          <i class="icon-lock icon-large"></i>
+        </a>
+      </li>
+      {% endif %}
+      <li style='margin-top: 2px; margin-left: 2px; color: black;'>
+        <a class='nav-link' href="#" style='color: black;'
+           data-toggle="tooltip" title="Log out">
+          <i class="icon-signout icon-large"></i>
+        </a>
+      </li>
+  </ul>
+<h3 id='logo' style='font-weight: 100; padding-bottom: 4px;'>
+<a class="text-muted" href="/">The FAD Study</a>
+</h3>
+</div>
+</header>
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" href="/static/css/social-buttons-3.css">
-    <link rel="stylesheet" href="/static/css/cal-heatmap.css">
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="static/javascript/html5shiv.js"></script>
-      <script src="static/javascript/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Scripts -->
-    <script src="/static/javascript/jquery.min.js"></script>
-    <script src='/static/javascript/bootstrap.min.js'></script>
-    <script src='/static/javascript/d3.v3.min.js'></script>
-    <script src='/static/javascript/cal-heatmap.js'></script>
-    <script src='/static/javascript/moment.min.js'></script>
-    <style>
-      #logo > a:hover {
-        color: #999;
-        text-decoration: none;
-      }
-
-      .nav > li > a {
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-
-      .nav > li > a:hover {
-        text-decoration: none;
-        background-color: white;
-      }
-
-      div[class="tooltip-inner"] {
-          max-width: 80px;
-          width: 80px;
-      }
-    </style>
-  </head>
-  <body>
-
-      <script type="text/javascript">
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '{{ app_id }}', // App ID
-          channelUrl : '{{ channel_url }}', // Channel File
-          status     : true, // check login status
-          cookie     : true, // enable cookies to allow the server to access the session
-          xfbml      : true // parse XFBML
-        });
-
-        // Listen to the auth.login which will be called when the user logs in
-        // using the Login button
-        FB.Event.subscribe('auth.login', function(response) {
-          // We want to reload the page now so Ruby can read the cookie that the
-          // Javascript SDK sat. But we don't want to use
-          // window.location.reload() because if this is in a canvas there was a
-          // post made to this page and a reload will trigger a message to the
-          // user asking if they want to send data again.
-          window.location = window.location.reload();
-        });
-
-        FB.Canvas.setAutoGrow();
-      };
-
-      // Load the SDK Asynchronously
-      (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/en_US/all.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-    </script>
-
-    <div class="container">
-      <header>
-        <div class="header">
-                <ul class="nav nav-pills pull-right">
-                    <li style='margin-top: 12px;'>
-                      <a style='padding: 0px; display:inline; hover: none;' href='http://facebook.com/{{ me["id"] }}'>{{ me['name'] }}</a>
-                    </li>
-                    {% if user.role == 1 %}
-                    <li style='margin-top: 2px; margin-left: 2px; color: black;'>
-                      <a class='nav-link' href="/admin/" style='color: black;'
-                         data-toggle="tooltip" title="Admin">
-                        <i class="icon-lock icon-large"></i>
-                      </a>
-                    </li>
-                    {% endif %}
-                    <li style='margin-top: 2px; margin-left: 2px; color: black;'>
-                      <a class='nav-link' href="#" style='color: black;'
-                         data-toggle="tooltip" title="Log out">
-                        <i class="icon-signout icon-large"></i>
-                      </a>
-                    </li>
-                </ul>
-            <h3 id='logo' style='font-weight: 100; padding-bottom: 4px;'>
-              <a class="text-muted" href="/">The FAD Study</a>
-            </h3>
-        </div>
-      </header>
-
-      <section id='user-list'>
-        <div class="row" style='margin-bottom: 0px;'>
-          <div class="col-md-12">
-            <h4 class='pull-left'>
-              <small>User:</small> {{ user.facebook_id }}
-            </h4>
-            <ul class="nav nav-pills pull-right">
-              <li>
-                <a id='access-token-link' class='nav-link' href='#' style='color: black;'
-                   data-toggle="tooltip" title="Access token">
-                  <i class="icon-key icon-large"></i>
-                </a>
-              </li>
-              <li>
-                <a class='nav-link' href="#" style='color: black;' data-toggle="tooltip" title="Notification">
-                  <i class="icon-globe icon-large"></i>
-                </a>
-              </li>
-              <li>
-                <a class='nav-link' href="#" style='color: black;' data-toggle="tooltip" title="Delete">
-                  <i class="icon-trash icon-large"></i>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="row" style='margin-bottom: 10px;'>
-          <div class="col-md-12">
-            <h4 class='pull-left'>
-              <small>Joined study:</small> {{ user.created_date_formatted() }}
-            </h4>
-            <h4 class='pull-right'>
-              <small>Last log in:</small> {{ user.last_login_formatted() }}
-            </h4>
-          </div>
-        </div>
+<section id='user-list'>
+<div class="row" style='margin-bottom: 0px;'>
+  <div class="col-md-12">
+    <h4 class='pull-left'>
+      <small>User:</small> {{ user.facebook_id }}
+    </h4>
+    <ul class="nav nav-pills pull-right">
+      <li>
+        <a id='access-token-link' class='nav-link' href='#' style='color: black;'
+           data-toggle="tooltip" title="Access token">
+          <i class="icon-key icon-large"></i>
+        </a>
+      </li>
+      <li>
+        <a class='nav-link' href="#" style='color: black;' data-toggle="tooltip" title="Notification">
+          <i class="icon-globe icon-large"></i>
+        </a>
+      </li>
+      <li>
+        <a class='nav-link' href="#" style='color: black;' data-toggle="tooltip" title="Delete">
+          <i class="icon-trash icon-large"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="row" style='margin-bottom: 10px;'>
+  <div class="col-md-12">
+    <h4 class='pull-left'>
+      <small>Joined study:</small> {{ user.created_date_formatted() }}
+    </h4>
+    <h4 class='pull-right'>
+      <small>Last log in:</small> {{ user.last_login_formatted() }}
+    </h4>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
         <div class="row">
           <div class="col-md-12">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <div class="row">
-                  <div class="col-md-12">
-                    <h4>Responses</h4>
-                  </div>
-                </div>
-              </div>
-              <div class="panel-body">
-                <div class="row">
-                  <div class="col-md-12">
-                    <div id="cal-heatmap" style='margin-left: 60px;'></div>
-                    <hr>
-                  </div>
-                </div>
-                <div class="row" style='text-align: center;'>
-                  <div class="col-md-4" style='border-right-width: 1px; border-right-style: solid; border-color: lightGrey;'>
-                    <h4>{{ user.moods|length }}</h4>
-                    <h5 style='color: grey;'>Total responses</h5>
-                  </div>
-                  <div class="col-md-4" style='border-right-width: 1px; border-right-style: solid; border-color: lightGrey;'>
-                    <h4>{{ user.response_rate() }}%</h4>
-                    <h5 style='color: grey;'>Response rate</h5>
-                  </div>
-                  <div class="col-md-4">
-                    <h4>{{ user.average_mood() }}</h4>
-                    <h5 style='color: grey;'>Average mood</h5>
-                  </div>
-                </div>
-              </div>
-                </div>
-            </h4>
+            <h4>Responses</h4>
           </div>
         </div>
-      </section>
-
-      <div class="footer" style='margin-top: 200px;'>
-        <p>&copy; The FAD Study 2013</p>
       </div>
-    </div> <!-- /container -->
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div id="cal-heatmap" style='margin-left: 60px;'></div>
+            <hr>
+          </div>
+        </div>
+        <div class="row" style='text-align: center;'>
+          <div class="col-md-4" style='border-right-width: 1px; border-right-style: solid; border-color: lightGrey;'>
+            <h4>{{ user.moods|length }}</h4>
+            <h5 style='color: grey;'>Total responses</h5>
+          </div>
+          <div class="col-md-4" style='border-right-width: 1px; border-right-style: solid; border-color: lightGrey;'>
+            <h4>{{ user.response_rate() }}%</h4>
+            <h5 style='color: grey;'>Response rate</h5>
+          </div>
+          <div class="col-md-4">
+            <h4>{{ user.average_mood() }}</h4>
+            <h5 style='color: grey;'>Average mood</h5>
+          </div>
+        </div>
+      </div>
+        </div>
+    </h4>
+  </div>
+</div>
+</section>
+<script>
+  var data = {};
+  {% for mood in user.moods %}
+  data['{{ mood.unix_timestamp()|safe }}'] = {{ mood.rating|safe }};
+  {% endfor %}
 
-    <script>
-      var data = {};
-      {% for mood in user.moods %}
-      data['{{ mood.unix_timestamp()|safe }}'] = {{ mood.rating|safe }};
-      {% endfor %}
+  var cal = new CalHeatMap();
 
-      var cal = new CalHeatMap();
+  cal.init({
+    itemSelector: "#cal-heatmap",
+    domain: "month",
+    subDomain: "x_day",
+    data: data,
+    start: new Date(2013, 9, 0),
+    cellSize: 20,
+    cellPadding: 5,
+    domainGutter: 20,
+    scale: [2, 4, 6, 8, 10],
+    range: 4,
+    subDomainTextFormat: "%d",
+    legend: [2, 4, 8, 10],
+    itemName : ["mood rating", "mood rating"]
 
-      cal.init({
-        itemSelector: "#cal-heatmap",
-        domain: "month",
-        subDomain: "x_day",
-        data: data,
-        start: new Date(2013, 9, 0),
-        cellSize: 20,
-        cellPadding: 5,
-        domainGutter: 20,
-        scale: [2, 4, 6, 8, 10],
-        range: 4,
-        subDomainTextFormat: "%d",
-        legend: [2, 4, 8, 10],
-        itemName : ["mood rating", "mood rating"]
-
-      });
-    </script>
-    <script>
-    $(function () {
-      $("a").tooltip({
-        'selector': '',
-        'placement': 'bottom'
-      });
-      $('#access-token-link').click(function () {
-        alert('{{ user.get_access_token() }}')
-      });
-    });
-    </script>
-  </body>
-</html>
+  });
+</script>
+<script>
+$(function () {
+  $("a").tooltip({
+    'selector': '',
+    'placement': 'bottom'
+  });
+  $('#access-token-link').click(function () {
+    alert('{{ user.get_access_token() }}')
+  });
+});
+</script>
+{% endblock %}
