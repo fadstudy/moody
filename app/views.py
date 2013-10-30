@@ -26,8 +26,9 @@ def index():
         user = query.first()
 
         if not user:
-            db.session.add(User(facebook_id=token['uid'],
-                                short_term_access_token=token['access_token']))
+            user = User(facebook_id=token['uid'],
+                        short_term_access_token=token['access_token'])
+            db.session.add(user)
         else:
             # Update the latest access_token
             db.session.query(User).\
@@ -46,6 +47,7 @@ def index():
         query = db.session.query(User).filter(User.facebook_id == token)
         user = query.first()
 
+        # If we've met the user before, they'll be in the database.
         if user:
             try:
                 graph = facebook.GraphAPI(user.short_term_access_token)
