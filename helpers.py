@@ -56,7 +56,7 @@ def send_notification(user_id, message='Hey, time to rate your mood for today!')
 def fake_moods(user_id):
     db.session.query(models.User).\
         filter(models.User.id == user_id).\
-        update({"created_date": datetime.utcnow() - timedelta(hours=24*15)})
+        update({"created_date": datetime.utcnow() - timedelta(days=3)})
     db.session.commit()
 
     query = db.session.query(models.User).filter(models.User.id == user_id)
@@ -65,10 +65,12 @@ def fake_moods(user_id):
     t = user.created_date
     i = 0
 
-    while i < 12:
-        user.moods.append(
-            models.Mood(rating= randint(1,10), time_stamp=(t + timedelta(hours=24*i)))
-        )
+    while i < 1:
+        mood = models.Mood(rating=randint(1,10), hospital=1, medication=1,
+                           time_stamp=(t + timedelta(hours=24*i)))
+
+        user.moods.append(mood)
         i += 1
 
     db.session.commit()
+

@@ -31,6 +31,18 @@ class User(db.Model):
     def last_login_formatted(self):
         return self.last_visit.strftime('%A, %B %d')
 
+    def has_answered_advanced_questions_recently(self):
+        for mood in reversed(self.moods):
+            # Check the last time these questions were answered.  The fields
+            # will be None if unanswered (that's the default).
+            if mood.medication and mood.hospital:
+                days_since_answer = (datetime.utcnow() - mood.time_stamp).days
+                return False if days_since_answer >= 14 else True
+
+        # If we reach this point it means the user hasn't answered the advanced
+        # questions, so we return False.
+        return False
+
     def latest_mood(self):
         try:
             latest_mood = self.moods[-1]
@@ -93,8 +105,10 @@ class Mood(db.Model):
     rating = db.Column(db.Integer)
     time_stamp = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    # medication = db.Column(db.SmallInteger, default=0)
-    # hospital = db.Column(db.SmallInteger, default=0)
+    medication = db.Column(db.SmallInteger, default=None)
+    medication_bipolar_related = db.Column(db.Boolean, default=None)
+    hospital = db.Column(db.SmallInteger, default=None)
+    hospital_bipolar_related = db.Column(db.Boolean, default=None)
 
     def unix_timestamp(self):
         return round(float(self.time_stamp.strftime('%s.%f')), 3)

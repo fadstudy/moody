@@ -5,6 +5,7 @@ import facebook
 from flask import redirect, render_template, request, url_for
 
 from app import app, db
+from forms import BasicMoodForm, AdvancedMoodForm
 from models import User, Mood
 
 # TODO: Hook these up via the config
@@ -61,10 +62,16 @@ def index():
             graph = facebook.GraphAPI(user.short_term_access_token)
             profile = graph.get_object("me")
 
+            # Decide what form we want to show the user
+            if user.has_answered_advanced_questions_recently():
+                form = BasicMoodForm()
+            else:
+                form = AdvancedMoodForm()
+
             return render_template('index.html',
                                    access_token=user.short_term_access_token,
                                    app_id=FACEBOOK_APP_ID,
-                                   channel_url=channel(),
+                                   channel_url=channel(), form=form,
                                    me=profile, name=FACEBOOK_APP_NAME,
                                    user=user)
         except facebook.GraphAPIError:
@@ -124,6 +131,7 @@ def user(user_id):
         return redirect('/')
 
 @app.route('/moods/new', methods=['POST'])
+@app.route('/moods/new/', methods=['POST'])
 def post_mood():
     current_user = get_user()
 
@@ -132,31 +140,31 @@ def post_mood():
             graph = facebook.GraphAPI(current_user.short_term_access_token)
             profile = graph.get_object("me")
 
-            for key, value in request.form.items():
-                if key == 'submit-button': continue
-                if not request.form[key].isdigit():
-                    return redirect('/')
-            try:
-                mood = request.form['mood-radio']
-                user_id = request.form['user-id']
+            form = AdvancedMoodForm()
+            if form.validate_on_submit():
+                mood_rating = form.moods.data
+                hospital = form.hospital.data
+                hospital_reason = form.hospital_reason.data
 
-                if user_id != current_user.facebook_id:
-                    return redirect('/')
+                medication = form.medication.data
+                medication_reason = form.medication_reason.data
 
-                query = db.session.query(User).filter(User.facebook_id == \
-                                                      user_id)
-                current_user = query.first()
-                current_user.moods.append(Mood(rating=mood))
+                mood = Mood(rating=mood_rating, hospital=hospital,
+                            hospital_bipolar_related=hospital_reason,
+                            medication=medication,
+                            medication_bipolar_related=medication_reason)
+
+                current_user.moods.append(mood)
 
                 db.session.commit()
-            except:
-                pass
+
+                return redirect('/')
 
             return render_template('index.html',
                                    access_token=\
                                            current_user.short_term_access_token,
                                    app_id=FACEBOOK_APP_ID,
-                                   channel_url=channel(),
+                                   channel_url=channel(), form=form,
                                    me=profile, name=FACEBOOK_APP_NAME,
                                    user=current_user)
         except facebook.GraphAPIError:

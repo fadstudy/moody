@@ -3,30 +3,30 @@
 {% block topbar %}
 
 <header>
-  <div class="header">
-          <ul class="nav nav-pills pull-right">
-              <li style='margin-top: 12px;'>
+    <div class="header">
+        <ul class="nav nav-pills pull-right">
+            <li style='margin-top: 12px;'>
                 <a style='padding: 0px; display:inline; hover: none;' href='http://facebook.com/{{ me["id"] }}'>{{ me['name'] }}</a>
-              </li>
-              {% if user.role == 1 %}
-              <li style='margin-top: 2px; margin-left: 2px; color: black;'>
+            </li>
+            {% if user.role == 1 %}
+            <li style='margin-top: 2px; margin-left: 2px; color: black;'>
                 <a class='nav-link' href="/admin/" style='color: black;'
                    data-toggle="tooltip" title="Admin">
-                  <i class="icon-lock icon-large"></i>
+                    <i class="icon-lock icon-large"></i>
                 </a>
-              </li>
-              {% endif %}
-              <li style='margin-top: 2px; margin-left: 2px; color: black;'>
+            </li>
+            {% endif %}
+            <li style='margin-top: 2px; margin-left: 2px; color: black;'>
                 <a id='log-out' class='nav-link' href="#" style='color: black;'
                    data-toggle="tooltip" title="Log out">
-                  <i class="icon-signout icon-large"></i>
+                    <i class="icon-signout icon-large"></i>
                 </a>
-              </li>
-          </ul>
-      <h3 id='logo' style='font-weight: 100; padding-bottom: 4px;'>
-        <a class="text-muted" href="/">The FAD Study</a>
-      </h3>
-  </div>
+            </li>
+        </ul>
+        <h3 id='logo' style='font-weight: 100; padding-bottom: 4px;'>
+            <a class="text-muted" href="/">The FAD Study</a>
+        </h3>
+    </div>
 </header>
 
 
@@ -68,102 +68,111 @@
     <section id="response">
       <div class="row" style='margin-top: 40px;'>
         <div class="col-md-12">
-          <form id='mood-form' class="form-horizontal" style='margin-left: 10px;' action="/moods/new" method="post">
+          <form id='mood-form' class="form-horizontal" style='margin-left: 10px;' action="/moods/new/" method="post">
+            {{ form.hidden_tag() }}
             <fieldset>
             <legend style="padding-left: 20px;">
               {{ date }}
             </legend>
+            </p>
             <input type='hidden' name='user-id' id='user-id' value='{{ me['id'] }}'>
             <div style='margin-left: 15px;'>
               <!-- Multiple Radios (inline) -->
-              <label style='padding-left: 0px; padding-right: 0px; text-align: left;' class="col-md-12 control-label" for="mood-radio">What would you rate your mood out of 10?</label>
+              <label style='padding-left: 0px; padding-right: 0px; text-align: left;' class="col-md-12 control-label" for="mood-radio">{{form.moods.label.text}}</label>
+              {% for error in form.errors.moods %}
+               <span style="color: red;">{{ error }}</span>
+               {% endfor %}<br>
             <div class="form-group">
-              <div class="col-md-12">
-                <label class="radio-inline" for="mood-radio-0">
-                  <input type="radio" name="mood-radio" id="mood-radio-0" value="1"
-                  required>
-                  1
+                <div class="col-md-12">
+                {% for mood in form.moods %}
+
+                <label class="radio-inline" for="moods-{{loop.index-1}}">
+                  {{ mood(required='required') }}
+                  {{ mood.label.text }}
                 </label>
-                <label class="radio-inline" for="mood-radio-1">
-                  <input type="radio" name="mood-radio" id="mood-radio-1" value="2">
-                  2
-                </label>
-                <label class="radio-inline" for="mood-radio-2">
-                  <input type="radio" name="mood-radio" id="mood-radio-2" value="3">
-                  3
-                </label>
-                <label class="radio-inline" for="mood-radio-3">
-                  <input type="radio" name="mood-radio" id="mood-radio-3" value="4">
-                  4
-                </label>
-                <label class="radio-inline" for="mood-radio-4">
-                  <input type="radio" name="mood-radio" id="mood-radio-4" value="5">
-                  5
-                </label>
-                <label class="radio-inline" for="mood-radio-5">
-                  <input type="radio" name="mood-radio" id="mood-radio-5" value="6">
-                  6
-                </label>
-                <label class="radio-inline" for="mood-radio-6">
-                  <input type="radio" name="mood-radio" id="mood-radio-6" value="7">
-                  7
-                </label>
-                <label class="radio-inline" for="mood-radio-7">
-                  <input type="radio" name="mood-radio" id="mood-radio-7" value="8">
-                  8
-                </label>
-                <label class="radio-inline" for="mood-radio-8">
-                  <input type="radio" name="mood-radio" id="mood-radio-8" value="9">
-                  9
-                </label>
-                <label class="radio-inline" for="mood-radio-9">
-                  <input type="radio" name="mood-radio" id="mood-radio-9" value="10">
-                  10
-                </label>
+                {% endfor %}
               </div>
             </div>
 
+            {% if form.hospital is defined %}
             <!-- Multiple Radios -->
             <label style='padding-left: 0px; padding-right: 0px; text-align: left;' class="col-md-12 control-label" for="hospital-radio">
-              Have you been in hospital in the last two weeks?
+              {{form.hospital.label.text}}
             </label>
+            {% for error in form.errors.hospital %}
+             <span style="color: red;">{{ error }}</span>
+             {% endfor %}<br>
             <div class="form-group">
               <div class="col-md-4">
-              <div class="radio">
+                {% for option in form.hospital %}
+              <!-- <div class="radio">
                 <label for="hospital-radio-0">
                   <input type="radio" name="hospital-radio" id="hospital-radio-0" value="0" checked="checked">
                   No
                 </label>
-                </div>
+                </div> -->
               <div class="radio">
-                <label for="hospital-radio-1">
+                <label for="hospital-{{loop.index-1}}">
+                {{ option(required='required') }}
+                 {{ option.label.text }}
+<!--                 <label for="hospital-radio-1">
                   <input type="radio" name="hospital-radio" id="hospital-radio-1" value="1">
-                  Yes
+                  Yes -->
                 </label>
                 </div>
+                {%endfor%}
               </div>
             </div>
-
+            <div class="form-group checkbox" id='hospital-reason' style='display: none; margin-bottom: 10px; margin-top:0px; padding-top:0px;'>
+                <div class="col-md-4">
+                    <label>
+                        {{ form.hospital_reason }}
+                        {{ form.hospital_reason.label.text }}
+                    </label>
+                </div>
+            </div>
             <!-- Multiple Radios -->
             <label style='padding-left: 0px; padding-right: 0px; text-align: left;' class="col-md-12 control-label" for="medication-radio">
-              Has your medication changed in the last two weeks?
+              {{form.medication.label.text}}
             </label>
+            {% for error in form.errors.medication %}
+             <span style="color: red;">{{ error }}</span>
+             {% endfor %}<br>
             <div class="form-group">
               <div class="col-md-4">
-              <div class="radio">
-                <label for="medication-radio-0">
-                  <input type="radio" name="medication-radio" id="medication-radio-0" value="0" checked="checked">
+
+                {% for option in form.medication %}
+              <!-- <div class="radio">
+                <label for="hospital-radio-0">
+                  <input type="radio" name="hospital-radio" id="hospital-radio-0" value="0" checked="checked">
                   No
                 </label>
-                </div>
+                </div> -->
               <div class="radio">
-                <label for="medication-radio-1">
-                  <input type="radio" name="medication-radio" id="medication-radio-1" value="1">
-                  Yes
+                <label for="medication-{{loop.index-1}}">
+                 {{ option(required='required') }}
+                 {{ option.label.text }}
+<!--                 <label for="hospital-radio-1">
+                  <input type="radio" name="hospital-radio" id="hospital-radio-1" value="1">
+                  Yes -->
                 </label>
                 </div>
+                {%endfor%}
               </div>
             </div>
+            <div class="form-group checkbox" id='medication-reason' style='display: none; margin-bottom: 10px; margin-top:0px; padding-top:0px;'>
+                <div class="col-md-4">
+                    <label>
+                        {{ form.medication_reason }}
+                        {{ form.medication_reason.label.text }}
+                    </label>
+                </div>
+            </div>
+
+            {% for error in form.errors.hospital_reason %}
+             <span style="color: red;">{{ error }}</span>
+             {% endfor %}<br>
+            {% endif %}
 
             <!-- Button -->
             <div class="form-group">
@@ -181,5 +190,21 @@
   <h4 style="margin-top: 20px;">Thanks, we have recorded your response for today.</h4>
   {% endif %}
   </section>
+<script>
+    $('#hospital-0').click(function(){
+        $('#hospital-reason').hide();
+        $('#hospital_reason').prop('checked', false);
+    });
+    $('#hospital-1').click(function(){
+        $('#hospital-reason').show();
+    });
 
+    $('#medication-0').click(function(){
+        $('#medication-reason').hide();
+        $('#medication_reason').prop('checked', false);
+    });
+    $('#medication-1').click(function(){
+        $('#medication-reason').show();
+    });
+</script>
 {% endblock %}
