@@ -105,19 +105,10 @@
             <div class="form-group">
               <div class="col-md-4">
                 {% for option in form.hospital %}
-              <!-- <div class="radio">
-                <label for="hospital-radio-0">
-                  <input type="radio" name="hospital-radio" id="hospital-radio-0" value="0" checked="checked">
-                  No
-                </label>
-                </div> -->
               <div class="radio">
                 <label for="hospital-{{loop.index-1}}">
                 {{ option(required='required') }}
                  {{ option.label.text }}
-<!--                 <label for="hospital-radio-1">
-                  <input type="radio" name="hospital-radio" id="hospital-radio-1" value="1">
-                  Yes -->
                 </label>
                 </div>
                 {%endfor%}
@@ -142,19 +133,10 @@
               <div class="col-md-4">
 
                 {% for option in form.medication %}
-              <!-- <div class="radio">
-                <label for="hospital-radio-0">
-                  <input type="radio" name="hospital-radio" id="hospital-radio-0" value="0" checked="checked">
-                  No
-                </label>
-                </div> -->
               <div class="radio">
                 <label for="medication-{{loop.index-1}}">
                  {{ option(required='required') }}
                  {{ option.label.text }}
-<!--                 <label for="hospital-radio-1">
-                  <input type="radio" name="hospital-radio" id="hospital-radio-1" value="1">
-                  Yes -->
                 </label>
                 </div>
                 {%endfor%}
