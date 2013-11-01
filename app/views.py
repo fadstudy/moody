@@ -114,7 +114,8 @@ def user(user_id):
             graph = facebook.GraphAPI(current_user.short_term_access_token)
             profile = graph.get_object("me")
 
-            query = db.session.query(User).filter(User.facebook_id == user_id)
+            query = db.session.query(User).filter(User.facebook_id == \
+                                                                   str(user_id))
             user = query.first()
 
             # TODO: rename chungus

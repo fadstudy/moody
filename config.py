@@ -2,7 +2,7 @@ import os
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 if os.environ.get('DATABASE_URL') is None:
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(base_dir, 'app.db')
+    SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/thefadstudy'
 else:
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
 LOG_LEVEL = os.environ.get('LOG_LEVEL', 'DEBUG')
