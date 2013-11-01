@@ -9,7 +9,9 @@ argparse==1.2.1
 certifi==0.0.8
 chardet==2.1.1
 distribute==0.6.24
+gunicorn==18.0
 itsdangerous==0.23
+psycopg2==2.5.1
 requests==0.10.4
 simplejson==2.2.1
 wsgiref==0.1.2
