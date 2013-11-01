@@ -66,30 +66,35 @@
 
     {% if user.latest_mood() == False %}
     <section id="response">
-      <div class="row" style='margin-top: 40px;'>
-        <div class="col-md-12">
-          <form id='mood-form' class="form-horizontal" style='margin-left: 10px;' action="/moods/new/" method="post">
-            {{ form.hidden_tag() }}
-            <fieldset>
-            <legend style="padding-left: 20px;">
-              {{ date }}
-            </legend>
-            </p>
-            <input type='hidden' name='user-id' id='user-id' value='{{ me['id'] }}'>
-            <div style='margin-left: 15px;'>
-              <!-- Multiple Radios (inline) -->
-              <label style='padding-left: 0px; padding-right: 0px; text-align: left;' class="col-md-12 control-label" for="mood-radio">{{form.moods.label.text}}</label>
-              {% for error in form.errors.moods %}
-               <span style="color: red;">{{ error }}</span>
-               {% endfor %}<br>
+        <div class="row" style='margin-top: 40px;'>
+            <div class="col-md-12">
+                <form id='mood-form' class="form-horizontal" style='margin-left: 10px;' action="/moods/new/" method="post">
+                    {{ form.hidden_tag() }}
+                    <fieldset>
+                        <legend style="padding-left: 20px;">{{ date }}</legend>
+                        <input id='user-id' type='hidden' name='user-id'
+                               value='{{ me['id'] }}'>
+                        <div style='margin-left: 0px;'>
+                            <!-- Multiple Radios (inline) -->
+                            <label style='padding-left: 0px; padding-right: 0px; text-align: left;'
+                                   class="col-md-12 control-label" for="mood-radio">
+                                {{form.moods.label.text}}
+                            </label>
+                            {% for error in form.errors.moods %}
+                            <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                            <br>
+
+
             <div class="form-group">
                 <div class="col-md-12">
                 {% for mood in form.moods %}
 
-                <label class="radio-inline" for="moods-{{loop.index-1}}">
+                <label class="radio-inline" for="moods-{{loop.index-1}}" style='margin-left: 10px;'>
                   {{ mood(required='required') }}
                   {{ mood.label.text }}
                 </label>
+
                 {% endfor %}
               </div>
             </div>

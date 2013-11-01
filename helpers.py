@@ -22,9 +22,6 @@ def change_user_role(user_id, role=0):
 
     db.session.commit()
 
-def create_database():
-    db.create_all()
-
 '''
 Exchange the hourly token for an extended two month token.
 '''
@@ -73,4 +70,3 @@ def fake_moods(user_id):
         i += 1
 
     db.session.commit()
-
