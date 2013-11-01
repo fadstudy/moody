@@ -1,2 +1,3 @@
-web: python run.py
+web: gunicorn runp-heroku:app
 init: python db_create.py
+
