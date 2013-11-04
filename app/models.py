@@ -82,19 +82,14 @@ class User(db.Model):
 
     def response_rate(self):
         # Calculate the number of days since sign up
-
         delta = (datetime.utcnow() + timedelta(hours=11)) - \
                                        (self.created_date + timedelta(hours=11))
 
-        moods = len(self.moods)
-        if moods == 0:
-            moods = 1
+        moods = 1 if len(self.moods) == 0 else moods = len(self.moods)
+        days = 1 if delta.days == 0 else days = delta.days
 
-        days = delta.days
-        if days == 0:
-            days = 1
-
-
+        if moods > days:
+            return '{0:.3g}'.format((1 / 1) * 100)
 
         return '{0:.3g}'.format((moods / float(days)) * 100)
 
