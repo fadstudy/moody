@@ -35,7 +35,8 @@ class User(db.Model):
             # Check the last time these questions were answered.  The fields
             # will be None if unanswered (that's the default).
             if mood.medication and mood.hospital:
-                days_since_answer = (datetime.utcnow() - mood.time_stamp).days
+                days_since_answer = ((datetime.utcnow() + timedelta(hours=11)) - \
+                    (mood.time_stamp + timedelta(hours=11))).days
                 return False if days_since_answer >= 14 else True
 
         # If we reach this point it means the user hasn't answered the advanced
@@ -82,7 +83,8 @@ class User(db.Model):
     def response_rate(self):
         # Calculate the number of days since sign up
 
-        delta = datetime.utcnow() - self.created_date
+        delta = (datetime.utcnow() + timedelta(hours=11)) - \
+                                       (self.created_date + timedelta(hours=11))
 
         moods = len(self.moods)
         if moods == 0:
