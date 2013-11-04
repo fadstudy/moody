@@ -183,7 +183,7 @@ $(function () {
         }
     });
 
-    $('#admin-confim-button').click(function() {
+    $('#admin-confirm-button').click(function() {
         if ($('#admin-confim-input').val() === '{{ user.facebook_id|safe }}') {
             $.ajax({
               url: '/make_admin/',
