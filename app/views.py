@@ -102,8 +102,8 @@ def admin():
     else:
         return redirect('/')
 
-@app.route('admin/users/<int:user_id>/')
-@app.route('admin/users/<int:user_id>')
+@app.route('/users/<int:user_id>/')
+@app.route('/users/<int:user_id>')
 def user(user_id):
     current_user = get_user()
 
