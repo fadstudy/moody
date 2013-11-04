@@ -180,5 +180,8 @@ def promote_to_admin(user_id):
             User.query.filter(User.facebook_id == user_id).\
                              update({"role": 1})
             db.session.commit()
+            return '', 200
+
         except:
             pass
+    return '', 404

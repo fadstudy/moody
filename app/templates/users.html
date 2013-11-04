@@ -189,7 +189,8 @@ $(function () {
               url: '/make_admin/',
               data: { user_id: '{{ user.facebook_id|safe }}' }
             })
-            .done(function( msg ) {
+            .done(function(response) {
+                console.log(response);
                 $('#change-role-modal').modal('toggle');
             });
         }
