@@ -186,8 +186,7 @@ $(function () {
     $('#admin-confirm-button').click(function() {
         if ($('#admin-confim-input').val() === '{{ user.facebook_id|safe }}') {
             $.ajax({
-              url: '/make_admin/',
-              data: { user_id: '{{ user.facebook_id|safe }}' }
+              url: '/make_admin/{{ user.facebook_id|safe }}',
             })
             .done(function(response) {
                 console.log(response);
