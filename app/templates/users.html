@@ -36,22 +36,32 @@
       <small>User:</small> {{ user.facebook_id }}
     </h4>
     <ul class="nav nav-pills pull-right">
+      {% if chungus.role == 1 %}
+      <li style="margin-top: 10px;">
+        <span class="label label-info">Admin</span>
+      </li>
+      {% endif %}
       <li>
         <a id='access-token-link' class='nav-link' href='#' style='color: black;'
            data-toggle="tooltip" title="Access token">
           <i class="icon-key icon-large"></i>
         </a>
       </li>
-      <li>
+<!--       <li>
         <a class='nav-link' href="#" style='color: black;' data-toggle="tooltip" title="Notification">
           <i class="icon-globe icon-large"></i>
         </a>
-      </li>
+      </li> -->
       <li>
+        <a id='change-role' class='nav-link' href="#" style='color: black;' data-toggle="tooltip" title="Change role">
+          <i class="icon-user icon-large"></i>
+        </a>
+      </li>
+<!--       <li>
         <a class='nav-link' href="#" style='color: black;' data-toggle="tooltip" title="Delete">
           <i class="icon-trash icon-large"></i>
         </a>
-      </li>
+      </li> -->
     </ul>
   </div>
 </div>
@@ -135,6 +145,10 @@ $(function () {
   });
   $('#access-token-link').click(function () {
     alert('{{ user.get_access_token() }}')
+  });
+
+  $('#change-role-link').click(function () {
+
   });
 });
 </script>

@@ -37,7 +37,7 @@
           <div class="row">
             <div class="col-md-12">
               <h4 class='pull-left'>
-                Users
+                <a href='/admin/users/'>Users</a>
               </h4>
               <h4 class='pull-right'>
                 <small>Count:</small> {{ users|count }}
@@ -61,7 +61,7 @@
               {% for user in users %}
               <tr>
                 <td>
-                  <a href="/users/{{ user.facebook_id }}/">
+                  <a href="/admin/users/{{ user.facebook_id }}/">
                     {{ user.facebook_id }}
                   </a>
                 </td>

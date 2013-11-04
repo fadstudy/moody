@@ -79,6 +79,7 @@ def index():
     except Exception as e:
         return 'Error: {0}'.format(e)
 
+@app.route('/admin/users/')
 @app.route('/admin/', methods=['GET'])
 def admin():
     current_user = get_user()
@@ -102,8 +103,8 @@ def admin():
     else:
         return redirect('/')
 
-@app.route('/users/<int:user_id>/')
-@app.route('/users/<int:user_id>')
+@app.route('/admin/users/<int:user_id>/')
+@app.route('/admin/users/<int:user_id>')
 def user(user_id):
     current_user = get_user()
 
