@@ -130,12 +130,12 @@
       </div>
       <div class="row" style='margin-left:20px; margin-top: 25px;'>
         <div class="col-md-11">
-          <input id='admin-confim' type="text" class="form-control" autofocus="autofocus">
+          <input id='admin-confim-input' type="text" class="form-control" autofocus="autofocus">
           <span class="help-block">Enter the user's ID and click the promote to admin button.  Be careful of who you promote.</span>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger btn-lg btn-block disabled">Promote to admin</button>
+        <button id='admin-confirm-button' type="button" class="btn btn-danger btn-lg btn-block disabled">Promote to admin</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -178,12 +178,18 @@ $(function () {
     });
 
     $('#admin-confim-input').keyup(function() {
-        alert( "Handler for .keyup() called." );
-        alert(this.val())
-        // if this value == user.facebook_id
-        // enable button
+        console.log( "Handler for .keyup() called." );
+        console.log(this.val())
+        if (this.val() == '{{ user.facebook_id|safe }}') {
+            $('#admin-confirm-button').removeClass( "disabled" )
+        }
     });
 
+    $('#admin-confim-button').click(function() {
+        if ($('#admin-confim-input').val() == '{{ user.facebook_id|safe }}') {
+            alert('TODO: Change role...')
+        }
+    });
 });
 </script>
 {% endblock %}
