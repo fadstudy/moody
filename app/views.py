@@ -1,4 +1,3 @@
-
 from datetime import datetime
 
 import facebook
@@ -50,7 +49,7 @@ def is_user_admin(user):
 def get_channel():
     return render_template('channel.html')
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
     try:
         user = get_user()
@@ -103,8 +102,8 @@ def admin():
     else:
         return redirect('/')
 
-@app.route('/users/<int:user_id>/')
-@app.route('/users/<int:user_id>')
+@app.route('admin/users/<int:user_id>/')
+@app.route('admin/users/<int:user_id>')
 def user(user_id):
     current_user = get_user()
 
@@ -118,8 +117,8 @@ def user(user_id):
             # TODO: rename chungus
             return render_template('users.html', app_id=FACEBOOK_APP_ID,
                                    channel_url=channel(), me=profile,
-                                   name=FACEBOOK_APP_NAME, user=current_user,
-                                   chungus=user)
+                                   name=FACEBOOK_APP_NAME, user=user,
+                                   chungus=current_user)
         except facebook.GraphAPIError:
             pass
     elif not current_user:

@@ -1,12 +1,10 @@
-
 from datetime import datetime, timedelta
 from random import randint
 
 from requests import get, post
 
-import config
 from app import db, models
-
+import config
 
 '''
 default role = 0
