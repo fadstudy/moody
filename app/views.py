@@ -25,8 +25,7 @@ def get_user():
                                           FACEBOOK_APP_SECRET)
 
     try:
-        query = db.session.query(User).filter(User.facebook_id == token['uid'])
-        user = query.first()
+        user = User.query.filter(User.facebook_id == token['uid']).first()
 
         if not user:
             user = User(facebook_id=token['uid'],
@@ -34,15 +33,14 @@ def get_user():
             db.session.add(user)
         else:
             # TODO: Remove the role
-            db.session.query(User).filter(User.facebook_id == token['uid']).\
-                                   update({"short_term_access_token": \
-                                           token['access_token'], "role": 1,
-                                           "last_visit": datetime.utcnow()})
+            User.query.filter(User.facebook_id == token['uid']).\
+                              update({"short_term_access_token": \
+                                      token['access_token'], "role": 1,
+                                      "last_visit": datetime.utcnow()})
 
         db.session.commit()
     except:
-        query = db.session.query(User).filter(User.facebook_id == token)
-        user = query.first()
+        user = User.query.filter(User.facebook_id == token).first()
 
     return user
 
@@ -55,30 +53,33 @@ def get_channel():
 
 @app.route('/')
 def index():
-    user = get_user()
+    try:
+        user = get_user()
 
-    if user:
-        try:
-            graph = facebook.GraphAPI(user.short_term_access_token)
-            profile = graph.get_object("me")
+        if user:
+            try:
+                graph = facebook.GraphAPI(user.short_term_access_token)
+                profile = graph.get_object("me")
 
-            # Decide what form we want to show the user
-            if user.has_answered_advanced_questions_recently():
-                form = BasicMoodForm()
-            else:
-                form = AdvancedMoodForm()
+                # Decide what form we want to show the user
+                if user.has_answered_advanced_questions_recently():
+                    form = BasicMoodForm()
+                else:
+                    form = AdvancedMoodForm()
 
-            return render_template('index.html',
-                                   access_token=user.short_term_access_token,
-                                   app_id=FACEBOOK_APP_ID,
-                                   channel_url=channel(), form=form,
-                                   me=profile, name=FACEBOOK_APP_NAME,
-                                   user=user)
-        except facebook.GraphAPIError:
-            pass
+                return render_template('index.html',
+                                       access_token=user.short_term_access_token,
+                                       app_id=FACEBOOK_APP_ID,
+                                       channel_url=channel(), form=form,
+                                       me=profile, name=FACEBOOK_APP_NAME,
+                                       user=user)
+            except facebook.GraphAPIError:
+                pass
 
-    return render_template('login.html', app_id=FACEBOOK_APP_ID,
-                           channel_url=channel(), name=FACEBOOK_APP_NAME)
+        return render_template('login.html', app_id=FACEBOOK_APP_ID,
+                               channel_url=channel(), name=FACEBOOK_APP_NAME)
+    except Exception as e:
+        return 'Error: {0}'.format(e)
 
 @app.route('/admin/', methods=['GET'])
 def admin():
