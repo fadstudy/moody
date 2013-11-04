@@ -181,6 +181,6 @@ def promote_to_admin(user_id):
                              update({"role": 1})
             db.session.commit()
             return '', 200
-        except:
-            pass
+        except Exception as e:
+            return '{0}'.format(e), 500
     return '', 404
