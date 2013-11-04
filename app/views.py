@@ -113,7 +113,7 @@ def user(user_id):
             graph = facebook.GraphAPI(current_user.short_term_access_token)
             profile = graph.get_object("me")
 
-            user = User.query.filter(User.facebook_id == str(user_id))first()
+            user = User.query.filter(User.facebook_id == str(user_id)).first()
 
             # TODO: rename chungus
             return render_template('users.html', app_id=FACEBOOK_APP_ID,
