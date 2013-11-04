@@ -131,11 +131,21 @@
       <div class="row" style='margin-left:20px; margin-top: 25px;'>
         <div class="col-md-11">
           <input id='admin-confim-input' type="text" class="form-control" autofocus="autofocus">
+          {% if user.role == 0%}
+          <span class="help-block">Enter the user's ID and click the revoke admin status button.</span>
+          {% endif %}
+          {% if user.role == 1%}
           <span class="help-block">Enter the user's ID and click the promote to admin button.  Be careful of who you promote.</span>
+          {% endif %}
         </div>
       </div>
       <div class="modal-footer">
+        {% if user.role == 0%}
         <button id='admin-confirm-button' type="button" class="btn btn-danger btn-lg btn-block disabled">Promote to admin</button>
+        {% endif %}
+        {% if user.role == 1%}
+        <button id='admin-confirm-button' type="button" class="btn btn-danger btn-lg btn-block disabled">Revoke admin status</button>
+        {% endif %}
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
