@@ -85,8 +85,8 @@ class User(db.Model):
         delta = (datetime.utcnow() + timedelta(hours=11)) - \
                                        (self.created_date + timedelta(hours=11))
 
-        moods = 1 if len(self.moods) == 0 else moods = len(self.moods)
-        days = 1 if delta.days == 0 else days = delta.days
+        moods = 1 if len(self.moods) == 0 else len(self.moods)
+        days = 1 if delta.days == 0 else delta.days
 
         if moods > days:
             return '{0:.3g}'.format((1 / 1) * 100)
