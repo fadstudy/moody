@@ -132,10 +132,10 @@
         <div class="col-md-11">
           <input id='admin-confim-input' type="text" class="form-control" autofocus="autofocus">
           {% if user.role == 0%}
-          <span class="help-block">Enter the user's ID and click the revoke admin status button.</span>
+          <span class="help-block">Enter the user's ID and click the promote to admin button.  Be careful of who you promote.</span>
           {% endif %}
           {% if user.role == 1%}
-          <span class="help-block">Enter the user's ID and click the promote to admin button.  Be careful of who you promote.</span>
+          <span class="help-block">Enter the user's ID and click the revoke admin status button.</span>
           {% endif %}
         </div>
       </div>
@@ -197,6 +197,12 @@ $(function () {
         if ($('#admin-confim-input').val() === '{{ user.facebook_id|safe }}') {
             $.ajax({
               url: '/make_admin/{{ user.facebook_id|safe }}',
+              {% if user.role == 0 %}
+              data: { 'role': 1 }
+              {% endif %}
+              {% if user.role == 1 %}
+              data: { 'role': 0 }
+              {% endif %}
             })
             .done(function(response) {
                 console.log(response);

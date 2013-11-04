@@ -178,7 +178,7 @@ def promote_to_admin(user_id):
     if current_user and is_user_admin(current_user):
         try:
             User.query.filter(User.facebook_id == str(user_id)).\
-                             update({"role": 1})
+                             update({"role": request.args.get('role')})
             db.session.commit()
             return '', 200
         except Exception as e:
