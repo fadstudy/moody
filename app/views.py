@@ -177,11 +177,10 @@ def promote_to_admin(user_id):
 
     if current_user and is_user_admin(current_user):
         try:
-            User.query.filter(User.facebook_id == user_id).\
+            User.query.filter(User.facebook_id == str(user_id)).\
                              update({"role": 1})
             db.session.commit()
             return '', 200
-
         except:
             pass
     return '', 404
