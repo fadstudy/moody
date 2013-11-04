@@ -25,10 +25,10 @@ class User(db.Model):
         # return self.tokens[0].access_token
 
     def created_date_formatted(self):
-        return self.created_date.strftime('%A, %B %d')
+        return (self.created_date + timedelta(hours=11)).strftime('%A, %B %d')
 
     def last_login_formatted(self):
-        return self.last_visit.strftime('%A, %B %d')
+        return (self.last_visit + timedelta(hours=11)).strftime('%A, %B %d')
 
     def has_answered_advanced_questions_recently(self):
         for mood in reversed(self.moods):
@@ -45,7 +45,8 @@ class User(db.Model):
     def latest_mood(self):
         try:
             latest_mood = self.moods[-1]
-            if latest_mood.time_stamp.date() == datetime.utcnow().date():
+            if (latest_mood.time_stamp + timedelta(hours=11)).date() == \
+                               (datetime.utcnow() + timedelta(hours=11)).date():
                 return True
             return False
         except IndexError:
