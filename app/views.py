@@ -51,33 +51,30 @@ def get_channel():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    try:
-        user = get_user()
+    user = get_user()
 
-        if user:
-            try:
-                graph = facebook.GraphAPI(user.short_term_access_token)
-                profile = graph.get_object("me")
+    if user:
+        try:
+            graph = facebook.GraphAPI(user.short_term_access_token)
+            profile = graph.get_object("me")
 
-                # Decide what form we want to show the user
-                if user.has_answered_advanced_questions_recently():
-                    form = BasicMoodForm()
-                else:
-                    form = AdvancedMoodForm()
+            # Decide what form we want to show the user
+            if user.has_answered_advanced_questions_recently():
+                form = BasicMoodForm()
+            else:
+                form = AdvancedMoodForm()
 
-                return render_template('index.html',
-                                       access_token=user.short_term_access_token,
-                                       app_id=FACEBOOK_APP_ID,
-                                       channel_url=channel(), form=form,
-                                       me=profile, name=FACEBOOK_APP_NAME,
-                                       user=user)
-            except facebook.GraphAPIError:
-                pass
+            return render_template('index.html',
+                                   access_token=user.short_term_access_token,
+                                   app_id=FACEBOOK_APP_ID,
+                                   channel_url=channel(), form=form,
+                                   me=profile, name=FACEBOOK_APP_NAME,
+                                   user=user)
+        except facebook.GraphAPIError:
+            pass
 
-        return render_template('login.html', app_id=FACEBOOK_APP_ID,
-                               channel_url=channel(), name=FACEBOOK_APP_NAME)
-    except Exception as e:
-        return 'Error: {0}'.format(e)
+    return render_template('login.html', app_id=FACEBOOK_APP_ID,
+                           channel_url=channel(), name=FACEBOOK_APP_NAME)
 
 @app.route('/admin/users/')
 @app.route('/admin/', methods=['GET'])
@@ -170,3 +167,18 @@ def post_mood():
 
     return render_template('login.html', app_id=FACEBOOK_APP_ID,
                            channel_url=channel(), name=FACEBOOK_APP_NAME)
+
+# TODO: Fix this method up to be a PUT request where we pass the user object
+# with the updated role to the method.  From there we just update the method.
+# The URI will be PUT: /users/:user/
+@app.route('/make_admin/<int:user_id>')
+def promote_to_admin(user_id):
+    current_user = get_user()
+
+    if current_user and is_user_admin(current_user):
+        try:
+            User.query.filter(User.facebook_id == user_id).\
+                             update({"role": 1})
+            db.session.commit()
+        except:
+            pass

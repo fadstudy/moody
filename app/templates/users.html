@@ -178,16 +178,20 @@ $(function () {
     });
 
     $('#admin-confim-input').keyup(function() {
-        console.log( "Handler for .keyup() called." );
-        console.log($("#admin-confim-input").val());
-        if ($("#admin-confim-input").val() == '{{ user.facebook_id|safe }}') {
+        if ($("#admin-confim-input").val() === '{{ user.facebook_id|safe }}') {
             $('#admin-confirm-button').removeClass( "disabled" );
         }
     });
 
     $('#admin-confim-button').click(function() {
-        if ($('#admin-confim-input').val() == '{{ user.facebook_id|safe }}') {
-            alert('TODO: Change role...');
+        if ($('#admin-confim-input').val() === '{{ user.facebook_id|safe }}') {
+            $.ajax({
+              url: '/make_admin/',
+              data: { user_id: '{{ user.facebook_id|safe }}' }
+            })
+            .done(function( msg ) {
+                $('#change-role-modal').modal('toggle');
+            });
         }
     });
 });
