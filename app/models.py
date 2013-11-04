@@ -60,6 +60,8 @@ class User(db.Model):
 
             if difference == 0:
                 return '-'
+            elif difference > 0:
+                return '+{0}'.format(str(difference))
             else:
                 return difference
         except IndexError:
