@@ -32,10 +32,9 @@ def get_user():
                         short_term_access_token=token['access_token'])
             db.session.add(user)
         else:
-            # TODO: Remove the role
             User.query.filter(User.facebook_id == token['uid']).\
                               update({"short_term_access_token": \
-                                      token['access_token'], "role": 1,
+                                      token['access_token'],
                                       "last_visit": datetime.utcnow()})
 
         db.session.commit()
@@ -90,8 +89,7 @@ def admin():
             graph = facebook.GraphAPI(current_user.short_term_access_token)
             profile = graph.get_object("me")
 
-            query = db.session.query(User)
-            users = query.all()
+            users = User.query.all()
 
             return render_template('admin.html', app_id=FACEBOOK_APP_ID,
                                    channel_url=channel(), me=profile,
@@ -115,9 +113,7 @@ def user(user_id):
             graph = facebook.GraphAPI(current_user.short_term_access_token)
             profile = graph.get_object("me")
 
-            query = db.session.query(User).filter(User.facebook_id == \
-                                                                   str(user_id))
-            user = query.first()
+            user = User.query.filter(User.facebook_id == str(user_id))first()
 
             # TODO: rename chungus
             return render_template('users.html', app_id=FACEBOOK_APP_ID,
