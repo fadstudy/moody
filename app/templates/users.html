@@ -179,15 +179,15 @@ $(function () {
 
     $('#admin-confim-input').keyup(function() {
         console.log( "Handler for .keyup() called." );
-        console.log(this.val())
-        if (this.val() == '{{ user.facebook_id|safe }}') {
-            $('#admin-confirm-button').removeClass( "disabled" )
+        console.log($("#admin-confim-input").val());
+        if ($("#admin-confim-input").val() == '{{ user.facebook_id|safe }}') {
+            $('#admin-confirm-button').removeClass( "disabled" );
         }
     });
 
     $('#admin-confim-button').click(function() {
         if ($('#admin-confim-input').val() == '{{ user.facebook_id|safe }}') {
-            alert('TODO: Change role...')
+            alert('TODO: Change role...');
         }
     });
 });
