@@ -34,11 +34,10 @@ class User(db.Model):
         for mood in reversed(self.moods):
             # Check the last time these questions were answered.  The fields
             # will be None if unanswered (that's the default).
-            if mood.medication and mood.hospital:
-                days_since_answer = ((datetime.utcnow() + timedelta(hours=11)) - \
-                    (mood.time_stamp + timedelta(hours=11))).days
+            if mood.medication >= 0 and mood.hospital >= 0:
+                days_since_answer = ((datetime.utcnow() + timedelta(hours=11)) \
+                                 - (mood.time_stamp + timedelta(hours=11))).days
                 return False if days_since_answer >= 14 else True
-
         # If we reach this point it means the user hasn't answered the advanced
         # questions, so we return False.
         return False

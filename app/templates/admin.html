@@ -28,54 +28,63 @@
   </div>
 </header>
 
-<section id='user-list'>
-  <div class="row">
-    <div class="col-md-12">
-
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <div class="row">
-            <div class="col-md-12">
-              <h4 class='pull-left'>
-                <a href='/admin/users/'>Users</a>
-              </h4>
-              <h4 class='pull-right'>
-                <small>Count:</small> {{ users|count }}
-              </h4>
+<section id='user-summary'>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4 class='pull-left'>
+                                <a href='/admin/users/'>Users</a>
+                            </h4>
+                            <h4 class='pull-right'>
+                                <small>Count:</small> {{ users|count }}
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <img src='/static/images/users_graph.png' alt='users'
+                                 style='margin-left: 65px;'>
+                        </div>
+                    </div>
+                    <div class="row" style='margin-top: 25px;'>
+                        <div class="col-md-6">
+                            <h4>User's recently joined</h4>
+                            <hr>
+                            <table class='table table-hover' style='margin-top:15px;'>
+                              <thead>
+                                <tr>
+                                  <th>Id</th>
+                                  <th>Joined study</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {% for user in users %}
+                                <tr>
+                                  <td>
+                                    <a href="/admin/users/{{ user.facebook_id }}/">
+                                      {{ user.facebook_id }}
+                                    </a>
+                                  </td>
+                                  <td>{{ user.created_date_formatted() }}</td>
+                                </tr>
+                                {% endfor %}
+                              </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h4>User's withdrawn from study</h4>
+                            <hr>
+                            -
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-        <div class="panel-body">
-          <table class='table table-hover' style='margin-top:15px;'>
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Joined study</th>
-                <th>Last log in</th>
-                <th>Response rate</th>
-                <th>Average mood</th>
-                <th>Change in mood</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for user in users %}
-              <tr>
-                <td>
-                  <a href="/admin/users/{{ user.facebook_id }}/">
-                    {{ user.facebook_id }}
-                  </a>
-                </td>
-                <td>{{ user.created_date_formatted() }}</td>
-                <td>{{ user.last_login_formatted() }}</td>
-                <td>{{ user.response_rate() }}%</td>
-                <td>{{ user.average_mood() }}</td>
-                <td>{{ user.latest_mood_change() }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-      </div>
     </div>
-  </div>
 </section>
 {% endblock %}

@@ -76,9 +76,31 @@ def index():
     return render_template('login.html', app_id=FACEBOOK_APP_ID,
                            channel_url=channel(), name=FACEBOOK_APP_NAME)
 
-@app.route('/admin/users/')
-@app.route('/admin/', methods=['GET'])
+@app.route('/admin/')
 def admin():
+    current_user = get_user()
+
+    if current_user and is_user_admin(current_user):
+        try:
+            graph = facebook.GraphAPI(current_user.short_term_access_token)
+            profile = graph.get_object("me")
+
+            users = User.query.all()[:5]
+
+            return render_template('admin.html', app_id=FACEBOOK_APP_ID,
+                                   channel_url=channel(), me=profile,
+                                   name=FACEBOOK_APP_NAME, user=current_user,
+                                   users=users)
+        except facebook.GraphAPIError:
+            pass
+    elif not current_user:
+        return render_template('login.html', app_id=FACEBOOK_APP_ID,
+                               channel_url=channel(), name=FACEBOOK_APP_NAME)
+    else:
+        return redirect('/')
+
+@app.route('/admin/users/')
+def users():
     current_user = get_user()
 
     if current_user and is_user_admin(current_user):
@@ -88,7 +110,7 @@ def admin():
 
             users = User.query.all()
 
-            return render_template('admin.html', app_id=FACEBOOK_APP_ID,
+            return render_template('users.html', app_id=FACEBOOK_APP_ID,
                                    channel_url=channel(), me=profile,
                                    name=FACEBOOK_APP_NAME, user=current_user,
                                    users=users)
@@ -113,7 +135,7 @@ def user(user_id):
             user = User.query.filter(User.facebook_id == str(user_id)).first()
 
             # TODO: rename chungus
-            return render_template('users.html', app_id=FACEBOOK_APP_ID,
+            return render_template('user.html', app_id=FACEBOOK_APP_ID,
                                    channel_url=channel(), me=profile,
                                    name=FACEBOOK_APP_NAME, user=user,
                                    chungus=current_user)

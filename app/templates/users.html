@@ -1,214 +1,81 @@
 {% extends "base.html" %}
 
 {% block topbar %}
-
 <header>
-<div class="header">
-  <ul class="nav nav-pills pull-right">
-      <li style='margin-top: 12px;'>
-        <a style='padding: 0px; display:inline; hover: none;' href='http://facebook.com/{{ me["id"] }}'>{{ me['name'] }}</a>
-      </li>
-      {% if chungus.role == 1 %}
-      <li style='margin-top: 2px; margin-left: 2px; color: black;'>
-        <a class='nav-link' href="/admin/" style='color: black;'
-           data-toggle="tooltip" title="Admin">
-          <i class="icon-lock icon-large"></i>
-        </a>
-      </li>
-      {% endif %}
-      <li style='margin-top: 2px; margin-left: 2px; color: black;'>
-        <a id='log-out' class='nav-link' href="#" style='color: black;'
-           data-toggle="tooltip" title="Log out">
-          <i class="icon-signout icon-large"></i>
-        </a>
-      </li>
-  </ul>
-<h3 id='logo' style='font-weight: 100; padding-bottom: 4px;'>
-<a class="text-muted" href="/">The FAD Study</a>
-</h3>
-</div>
+  <div class="header">
+          <ul class="nav nav-pills pull-right">
+              <li style='margin-top: 12px;'>
+                <a style='padding: 0px; display:inline; hover: none;' href='http://facebook.com/{{ me["id"] }}'>{{ me['name'] }}</a>
+              </li>
+              {% if user.role == 1 %}
+              <li style='margin-top: 2px; margin-left: 2px; color: black;'>
+                <a class='nav-link' href="/admin/" style='color: black;'
+                   data-toggle="tooltip" title="Admin">
+                  <i class="icon-lock icon-large"></i>
+                </a>
+              </li>
+              {% endif %}
+              <li style='margin-top: 2px; margin-left: 2px; color: black;'>
+                <a id='log-out' class='nav-link' href="#" style='color: black;'
+                   data-toggle="tooltip" title="Log out">
+                  <i class="icon-signout icon-large"></i>
+                </a>
+              </li>
+          </ul>
+      <h3 id='logo' style='font-weight: 100; padding-bottom: 4px;'>
+        <a class="text-muted" href="/">The FAD Study</a>
+      </h3>
+  </div>
 </header>
 
 <section id='user-list'>
-  <div class="row" style="margin-bottom: 0px;">
-      <div class="col-md-12">
-        <h6 class="pull-right" style="margin-top: 0px; margin-bottom: 5px;">
-          <a href="/admin/users/"><i class="icon-arrow-left icon-small"></i> Back to users</a>
-        </h6>
+  <div class="row">
+    <div class="col-md-12">
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-md-12">
+              <h4 class='pull-left'>
+                <a href='/admin/users/'>Users</a>
+              </h4>
+              <h4 class='pull-right'>
+                <small>Count:</small> {{ users|count }}
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <table class='table table-hover' style='margin-top:15px;'>
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Joined study</th>
+                <th>Last log in</th>
+                <th>Response rate</th>
+                <th>Average mood</th>
+                <th>Change in mood</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+              <tr>
+                <td>
+                  <a href="/admin/users/{{ user.facebook_id }}/">
+                    {{ user.facebook_id }}
+                  </a>
+                </td>
+                <td>{{ user.created_date_formatted() }}</td>
+                <td>{{ user.last_login_formatted() }}</td>
+                <td>{{ user.response_rate() }}%</td>
+                <td>{{ user.average_mood() }}</td>
+                <td>{{ user.latest_mood_change() }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
       </div>
     </div>
-<div class="row" style='margin-bottom: 0px;'>
-  <div class="col-md-12">
-    <h4 class='pull-left'>
-      <small>User:</small> {{ user.facebook_id }}
-    </h4>
-    <ul class="nav nav-pills pull-right">
-      {% if user.role == 1 %}
-      <li style="margin-top: 10px;">
-        <span class="label label-info">Admin</span>
-      </li>
-      {% endif %}
-      <li>
-        <a id='access-token-link' class='nav-link' href='#' style='color: black;'
-           data-toggle="tooltip" title="Access token">
-          <i class="icon-key icon-large"></i>
-        </a>
-      </li>
-<!--       <li>
-        <a class='nav-link' href="#" style='color: black;' data-toggle="tooltip" title="Notification">
-          <i class="icon-globe icon-large"></i>
-        </a>
-      </li> -->
-      <li>
-        <a id='change-role-link' class='nav-link' href="#" style='color: black;' data-toggle="modal" title="Change role" data-target="#change-role-modal">
-          <i class="icon-user icon-large"></i>
-        </a>
-      </li>
-<!--       <li>
-        <a class='nav-link' href="#" style='color: black;' data-toggle="tooltip" title="Delete">
-          <i class="icon-trash icon-large"></i>
-        </a>
-      </li> -->
-    </ul>
   </div>
-</div>
-<div class="row" style='margin-bottom: 10px;'>
-  <div class="col-md-12">
-    <h4 class='pull-left'>
-      <small>Joined study:</small> {{ user.created_date_formatted() }}
-    </h4>
-    <h4 class='pull-right'>
-      <small>Last log in:</small> {{ user.last_login_formatted() }}
-    </h4>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <div class="row">
-          <div class="col-md-12">
-            <h4>Responses</h4>
-          </div>
-        </div>
-      </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-md-12">
-            <div id="cal-heatmap" style='margin-left: 60px;'></div>
-            <hr>
-          </div>
-        </div>
-        <div class="row" style='text-align: center;'>
-          <div class="col-md-4" style='border-right-width: 1px; border-right-style: solid; border-color: lightGrey;'>
-            <h4>{{ user.moods|length }}</h4>
-            <h5 style='color: grey;'>Total responses</h5>
-          </div>
-          <div class="col-md-4" style='border-right-width: 1px; border-right-style: solid; border-color: lightGrey;'>
-            <h4>{{ user.response_rate() }}%</h4>
-            <h5 style='color: grey;'>Response rate</h5>
-          </div>
-          <div class="col-md-4">
-            <h4>{{ user.average_mood() }}</h4>
-            <h5 style='color: grey;'>Average mood</h5>
-          </div>
-        </div>
-      </div>
-        </div>
-    </h4>
-  </div>
-</div>
 </section>
-
-<!-- Modal -->
-<div class="modal fade" id="change-role-modal" tabindex="-1" role="dialog" aria-labelledby="change-role" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">{{ user.facebook_id }}</h4>
-      </div>
-      <div class="row" style='margin-left:20px; margin-top: 25px;'>
-        <div class="col-md-11">
-          <input id='admin-confim-input' type="text" class="form-control" autofocus="autofocus">
-          {% if user.role == 0%}
-          <span class="help-block">Enter the user's ID and click the promote to admin button.  Be careful of who you promote.</span>
-          {% endif %}
-          {% if user.role == 1%}
-          <span class="help-block">Enter the user's ID and click the revoke admin status button.</span>
-          {% endif %}
-        </div>
-      </div>
-      <div class="modal-footer">
-        {% if user.role == 0%}
-        <button id='admin-confirm-button' type="button" class="btn btn-danger btn-lg btn-block disabled">Promote to admin</button>
-        {% endif %}
-        {% if user.role == 1%}
-        <button id='admin-confirm-button' type="button" class="btn btn-danger btn-lg btn-block disabled">Revoke admin status</button>
-        {% endif %}
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<script>
-  var data = {};
-  {% for mood in user.moods %}
-  data['{{ mood.unix_timestamp()|safe }}'] = {{ mood.rating|safe }};
-  {% endfor %}
-
-  var cal = new CalHeatMap();
-
-  cal.init({
-    itemSelector: "#cal-heatmap",
-    domain: "month",
-    subDomain: "x_day",
-    data: data,
-    start: new Date(2013, 9, 0),
-    cellSize: 20,
-    cellPadding: 5,
-    domainGutter: 20,
-    scale: [2, 4, 6, 8, 10],
-    range: 4,
-    subDomainTextFormat: "%d",
-    legend: [2, 4, 8, 10],
-    itemName : ["mood rating", "mood rating"]
-
-  });
-</script>
-<script>
-$(function () {
-    $("a").tooltip({
-        'selector': '',
-        'placement': 'bottom'
-    });
-
-    $('#access-token-link').click(function () {
-        alert('{{ user.get_access_token() }}')
-    });
-
-    $('#admin-confim-input').keyup(function() {
-        if ($("#admin-confim-input").val() === '{{ user.facebook_id|safe }}') {
-            $('#admin-confirm-button').removeClass( "disabled" );
-        }
-    });
-
-    $('#admin-confirm-button').click(function() {
-        if ($('#admin-confim-input').val() === '{{ user.facebook_id|safe }}') {
-            $.ajax({
-              url: '/make_admin/{{ user.facebook_id|safe }}',
-              {% if user.role == 0 %}
-              data: { 'role': 1 }
-              {% endif %}
-              {% if user.role == 1 %}
-              data: { 'role': 0 }
-              {% endif %}
-            })
-            .done(function(response) {
-                $('#change-role-modal').modal('toggle');
-            });
-        }
-    });
-});
-</script>
 {% endblock %}
