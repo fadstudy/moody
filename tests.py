@@ -1,52 +1,70 @@
+# -*- coding: utf8 -*-
 
+import os
 import unittest
 
-from requests import get, post
+from coverage import coverage
+cov = coverage(branch = True, omit = ['flask/*', 'tests.py'])
+cov.start()
 
-from app import db, models
+from config import BASE_DIRECTORY
+from app import app, db
+from app.models import User
 
-# http://www.openp2p.com/pub/a/python/2004/12/02/tdd_pyunit.html
 
 class UserTests(unittest.TestCase):
-    def testUserConstruction(self):
-        pass
+    def setUp(self):
+        app.config['TESTING'] = True
+        app.config['CSRF_ENABLED'] = False
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(BASE_DIRECTORY, 'test.db')
+        db.create_all()
 
-    def testCreatedDate(self):
-        pass
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
 
-    def testLastLogIn(self):
-        pass
+    def test_user_construction(self):
+        user = User(facebook_id='1234567')
 
-    def testLatestMood(self):
-        pass
+        db.session.add(user)
+        db.session.commit()
 
-    def testAverageMood(self):
-        pass
+        assert user is not None
+        assert user.role == 0
+        assert user.latest_mood() == False
+        assert user.latest_mood_change() == 0
+        assert user.average_mood() == 0
+        assert user.response_rate() == 0.0
+        assert user.has_answered_advanced_questions_recently() == False
 
-    def testResponseRate(self):
-        pass
+        user2 = None
+        try:
+            user2 = User(facebook_id='1234567')
 
-    def testLatestMoodChange(self):
-        pass
+            db.session.add(user2)
+            db.session.commit()
+        except:
+            user2 = None
 
-
-class MoodTests(unittest.TestCase):
-    def testMoodSubmission(self):
-        payload = {'mood-radio' : '2',
-                   'hosptial-radio': '1',
-                   'medication-radio': '1',
-                   'user-id' : '1000'}
-
-        response = post('http://localhost:5001/moods/new', params=payload)
-
-        print response.content
-
-    def testMoodValidation(self):
-        pass
-
+        assert user2 is None
 
 def main():
     unittest.main()
 
 if __name__ == '__main__':
-    main()
+    try:
+        unittest.main()
+    except:
+        pass
+
+    '''
+    Uncomment for coverage reports
+    '''
+    # cov.stop()
+    # cov.save()
+    # print "\n\nCoverage Report:\n"
+    # cov.report()
+    # print "\nHTML version: " + os.path.join(BASE_DIRECTORY,
+    #                                         "tmp/coverage/index.html")
+    # cov.html_report(directory = 'tmp/coverage')
+    # cov.erase()

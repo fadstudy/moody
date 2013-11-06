@@ -59,33 +59,29 @@ class User(db.Model):
 
             difference = ultimate_mood - penultimate_mood
 
-            if difference == 0:
-                return '-'
-            elif difference > 0:
-                return '+{0}'.format(str(difference))
-            else:
-                return difference
+            return difference
         except IndexError:
-            return '-'
+            return 0
 
     def average_mood(self):
         total_rating = 0
         for mood in self.moods:
             total_rating += mood.rating
 
-        moods = len(self.moods)
-        if moods is 0:
-            moods = 1
+        total_moods = 1 if len(self.moods) == 0 else len(self.moods)
 
-        return total_rating / moods
+        return total_rating / total_moods
 
     def response_rate(self):
         # Calculate the number of days since sign up
         delta = (datetime.utcnow() + timedelta(hours=11)) - \
                                        (self.created_date + timedelta(hours=11))
 
-        moods = 1 if len(self.moods) == 0 else len(self.moods)
-        days = 1 if delta.days == 0 else delta.days
+        moods = len(self.moods)
+        days = delta.days
+
+        if days == 0 or moods == 0:
+            return 0.0
 
         if moods > days:
             return '{0:.3g}'.format((1 / 1) * 100)
