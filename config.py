@@ -1,8 +1,8 @@
 import os
 
 BASE_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
-
 CSRF_ENABLED = True
+DEBUG = True
 SECRET_KEY = '!th1553cr3tk3yha5thaty0l0swag!'
 
 if os.environ.get('DATABASE_URL') is None:
