@@ -157,33 +157,57 @@ def post_mood():
             graph = facebook.GraphAPI(current_user.short_term_access_token)
             profile = graph.get_object("me")
 
-            form = AdvancedMoodForm()
-            if form.validate_on_submit():
-                mood_rating = form.moods.data
-                hospital = form.hospital.data
-                hospital_reason = form.hospital_reason.data
+            # Decide what form we want to show the user
+            if current_user.has_answered_advanced_questions_recently():
+                form = BasicMoodForm()
 
-                medication = form.medication.data
-                medication_reason = form.medication_reason.data
+                if form.validate_on_submit():
+                    mood_rating = form.moods.data
 
-                mood = Mood(rating=mood_rating, hospital=hospital,
-                            hospital_bipolar_related=hospital_reason,
-                            medication=medication,
-                            medication_bipolar_related=medication_reason)
+                    mood = Mood(rating=mood_rating, hospital=0,
+                              hospital_bipolar_related=0, medication=0,
+                              medication_bipolar_related=0)
 
-                current_user.moods.append(mood)
+                    current_user.moods.append(mood)
+                    db.session.commit()
 
-                db.session.commit()
-
-                return redirect('/')
-
-            return render_template('index.html',
-                                   access_token=\
+                    return redirect('/')
+                else:
+                    return render_template('index.html',
+                                           access_token=\
                                            current_user.short_term_access_token,
-                                   app_id=FACEBOOK_APP_ID,
-                                   channel_url=channel(), form=form,
-                                   me=profile, name=FACEBOOK_APP_NAME,
-                                   user=current_user)
+                                           app_id=FACEBOOK_APP_ID,
+                                           channel_url=channel(), form=form,
+                                           me=profile, name=FACEBOOK_APP_NAME,
+                                           user=current_user)
+
+            else:
+                form = AdvancedMoodForm()
+
+                if form.validate_on_submit():
+                    mood_rating = form.moods.data
+                    hospital = form.hospital.data
+                    hospital_reason = form.hospital_reason.data
+                    medication = form.medication.data
+                    medication_reason = form.medication_reason.data
+
+                    mood = Mood(rating=mood_rating, hospital=hospital,
+                                hospital_bipolar_related=hospital_reason,
+                                medication=medication,
+                                medication_bipolar_related=medication_reason)
+
+                    current_user.moods.append(mood)
+                    db.session.commit()
+
+                    return redirect('/')
+                else:
+                    return render_template('index.html',
+                                           access_token=\
+                                           current_user.short_term_access_token,
+                                           app_id=FACEBOOK_APP_ID,
+                                           channel_url=channel(), form=form,
+                                           me=profile, name=FACEBOOK_APP_NAME,
+                                           user=current_user)
         except facebook.GraphAPIError:
             pass
 
