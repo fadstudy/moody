@@ -99,10 +99,10 @@ class Mood(db.Model):
     rating = db.Column(db.Integer)
     time_stamp = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    medication = db.Column(db.SmallInteger, default=None)
-    medication_bipolar_related = db.Column(db.Boolean, default=None)
-    hospital = db.Column(db.SmallInteger, default=None)
-    hospital_bipolar_related = db.Column(db.Boolean, default=None)
+    medication = db.Column(db.SmallInteger, default=0)
+    medication_bipolar_related = db.Column(db.Boolean, default=False)
+    hospital = db.Column(db.SmallInteger, default=0)
+    hospital_bipolar_related = db.Column(db.Boolean, default=False)
 
     def unix_timestamp(self):
         return round(float(self.time_stamp.strftime('%s.%f')), 3)

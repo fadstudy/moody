@@ -1,5 +1,6 @@
 # -*- coding: utf8 -*-
 
+from datetime import datetime
 import os
 import unittest
 
@@ -9,10 +10,10 @@ cov.start()
 
 from config import BASE_DIRECTORY
 from app import app, db
-from app.models import User
+from app.models import User, Mood
 
 
-class UserTests(unittest.TestCase):
+class ModelTests(unittest.TestCase):
     def setUp(self):
         app.config['TESTING'] = True
         app.config['CSRF_ENABLED'] = False
@@ -47,6 +48,30 @@ class UserTests(unittest.TestCase):
             user2 = None
 
         assert user2 is None
+
+    def test_mood_construction(self):
+        facebook_id = '1234567'
+        user = User(facebook_id=facebook_id)
+
+        db.session.add(user)
+        db.session.commit()
+
+        assert user is not None
+        assert len(user.moods) == 0
+
+        mood = Mood(rating=10)
+
+        user.moods.append(mood)
+        db.session.commit()
+
+        assert len(user.moods) == 1
+
+        assert mood.rating == 10
+        assert mood.time_stamp.hour == datetime.utcnow().hour
+        assert mood.medication == 0
+        assert mood.medication_bipolar_related == False
+        assert mood.hospital == 0
+        assert mood.hospital_bipolar_related == False
 
 def main():
     unittest.main()
