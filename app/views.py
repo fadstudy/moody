@@ -150,65 +150,72 @@ def user(user_id):
 @app.route('/moods/new', methods=['POST'])
 @app.route('/moods/new/', methods=['POST'])
 def post_mood():
-    if current_user:
-        try:
-            graph = facebook.GraphAPI(current_user.short_term_access_token)
-            profile = graph.get_object("me")
+    try:
+        current_user = get_user()
 
-            # Decide what form we want to show the user
-            if current_user.has_answered_advanced_questions_recently():
-                form = BasicMoodForm()
+        if current_user:
+            try:
+                graph = facebook.GraphAPI(current_user.short_term_access_token)
+                profile = graph.get_object("me")
 
-                if form.validate_on_submit():
-                    mood_rating = form.moods.data
+                # Decide what form we want to show the user
+                if current_user.has_answered_advanced_questions_recently():
+                    form = BasicMoodForm()
 
-                    mood = Mood(rating=mood_rating)
+                    if form.validate_on_submit():
+                        mood_rating = form.moods.data
 
-                    current_user.moods.append(mood)
-                    db.session.commit()
+                        mood = Mood(rating=mood_rating, hospital=0,
+                                  hospital_bipolar_related=0, medication=0,
+                                  medication_bipolar_related=0)
 
-                    return redirect('/')
+                        current_user.moods.append(mood)
+                        db.session.commit()
+
+                        return redirect('/')
+                    else:
+                        return render_template('index.html',
+                                               access_token=\
+                                               current_user.short_term_access_token,
+                                               app_id=FACEBOOK_APP_ID,
+                                               channel_url=channel(), form=form,
+                                               me=profile, name=FACEBOOK_APP_NAME,
+                                               user=current_user)
+
                 else:
-                    return render_template('index.html',
-                                           access_token=\
-                                           current_user.short_term_access_token,
-                                           app_id=FACEBOOK_APP_ID,
-                                           channel_url=channel(), form=form,
-                                           me=profile, name=FACEBOOK_APP_NAME,
-                                           user=current_user)
+                    form = AdvancedMoodForm()
 
-            else:
-                form = AdvancedMoodForm()
+                    if form.validate_on_submit():
+                        mood_rating = form.moods.data
+                        hospital = form.hospital.data
+                        hospital_reason = form.hospital_reason.data
+                        medication = form.medication.data
+                        medication_reason = form.medication_reason.data
 
-                if form.validate_on_submit():
-                    mood_rating = form.moods.data
-                    hospital = form.hospital.data
-                    hospital_reason = form.hospital_reason.data
-                    medication = form.medication.data
-                    medication_reason = form.medication_reason.data
+                        mood = Mood(rating=mood_rating, hospital=hospital,
+                                    hospital_bipolar_related=hospital_reason,
+                                    medication=medication,
+                                    medication_bipolar_related=medication_reason)
 
-                    mood = Mood(rating=mood_rating, hospital=hospital,
-                                hospital_bipolar_related=hospital_reason,
-                                medication=medication,
-                                medication_bipolar_related=medication_reason)
+                        current_user.moods.append(mood)
+                        db.session.commit()
 
-                    current_user.moods.append(mood)
-                    db.session.commit()
+                        return redirect('/')
+                    else:
+                        return render_template('index.html',
+                                               access_token=\
+                                               current_user.short_term_access_token,
+                                               app_id=FACEBOOK_APP_ID,
+                                               channel_url=channel(), form=form,
+                                               me=profile, name=FACEBOOK_APP_NAME,
+                                               user=current_user)
+            except facebook.GraphAPIError:
+                pass
 
-                    return redirect('/')
-                else:
-                    return render_template('index.html',
-                                           access_token=\
-                                           current_user.short_term_access_token,
-                                           app_id=FACEBOOK_APP_ID,
-                                           channel_url=channel(), form=form,
-                                           me=profile, name=FACEBOOK_APP_NAME,
-                                           user=current_user)
-        except facebook.GraphAPIError:
-            pass
-
-    return render_template('login.html', app_id=FACEBOOK_APP_ID,
-                           channel_url=channel(), name=FACEBOOK_APP_NAME)
+        return render_template('login.html', app_id=FACEBOOK_APP_ID,
+                               channel_url=channel(), name=FACEBOOK_APP_NAME)
+    except Exception as e:
+        return '{0}'.format(e)
 
 # TODO: Fix this method up to be a PUT request where we pass the user object
 # with the updated role to the method.  From there we just update the method.
