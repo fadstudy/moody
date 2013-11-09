@@ -18,6 +18,7 @@ class ModelTests(unittest.TestCase):
         app.config['TESTING'] = True
         app.config['CSRF_ENABLED'] = False
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(BASE_DIRECTORY, 'test.db')
+        app.config['debug'] = True
         db.create_all()
 
     def tearDown(self):
@@ -49,9 +50,8 @@ class ModelTests(unittest.TestCase):
 
         assert user2 is None
 
-    def test_mood_construction(self):
-        facebook_id = '1234567'
-        user = User(facebook_id=facebook_id)
+    def test_basic_mood_construction(self):
+        user = User(facebook_id='1234567')
 
         db.session.add(user)
         db.session.commit()
@@ -72,6 +72,39 @@ class ModelTests(unittest.TestCase):
         assert mood.medication_bipolar_related == False
         assert mood.hospital == 0
         assert mood.hospital_bipolar_related == False
+        assert user.has_answered_advanced_questions_recently() == False
+
+    def test_advanced_mood_construction(self):
+        user = User(facebook_id='1234567')
+
+        db.session.add(user)
+        db.session.commit()
+
+        assert user is not None
+        assert len(user.moods) == 0
+
+        mood = Mood(rating=10, medication=1, hospital=1,
+                    medication_bipolar_related=True,
+                    hospital_bipolar_related=True)
+
+        user.moods.append(mood)
+        db.session.commit()
+
+        assert len(user.moods) == 1
+
+        assert mood.rating == 10
+        assert mood.time_stamp.hour == datetime.utcnow().hour
+        assert mood.medication == 1
+        assert mood.medication_bipolar_related == True
+        assert mood.hospital == 1
+        assert mood.hospital_bipolar_related == True
+
+    def test_multiple_moods_over_multiple_days(self):
+        pass
+
+    def if_user_has_answered_advanced_questions_recently(self):
+        pass
+
 
 def main():
     unittest.main()

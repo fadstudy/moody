@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
-
+from flask import abort
+from flask.ext.restful import Api, Resource, fields, marshal
 from app import db
 
 ROLE_USER = 0
@@ -125,3 +126,45 @@ class Token(db.Model):
         self.access_token = access_token
         # Set the expiry from 2 months from now
         self.expiry_date = datetime.utcnow() + timedelta(hours=720)
+
+
+'''
+API Models
+'''
+
+users_fields = {
+    'facebook_id': fields.String,
+    'short_term_access_token': fields.String,
+    'created_date': fields.String,
+    'last_visit': fields.String,
+    'uri': fields.Url('User')
+}
+
+user_fields = {
+    'facebook_id': fields.String,
+    'short_term_access_token': fields.String,
+    'created_date': fields.String,
+    'last_visit': fields.String,
+    'id': fields.String,
+}
+
+class UserListAPI(Resource):
+    def __init__(self):
+        super(UserListAPI, self).__init__()
+
+    def get(self):
+        return { 'users': map(lambda u: marshal(u, users_fields),
+                              User.query.all()) }
+
+
+class UserAPI(Resource):
+    def __init__(self):
+        super(UserAPI, self).__init__()
+
+    def get(self, id):
+        user = db.session.query(User).filter(User.id == id).first()
+
+        if not user:
+            abort(404)
+
+        return { 'user': marshal(user, user_fields)}

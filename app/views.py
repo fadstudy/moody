@@ -3,7 +3,7 @@ from datetime import datetime
 import facebook
 from flask import redirect, render_template, request, url_for
 
-from app import app, db
+from app import api, app, db
 from forms import BasicMoodForm, AdvancedMoodForm
 from models import User, Mood
 
