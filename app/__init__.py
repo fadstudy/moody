@@ -1,13 +1,14 @@
 from flask import Flask
+from flask.ext.httpauth import HTTPBasicAuth
 from flask.ext.restful import Api
 from flask.ext.sqlalchemy import SQLAlchemy
 
+
 app = Flask(__name__)
-app.config.from_object('config')
 api = Api(app)
+auth = HTTPBasicAuth()
 db = SQLAlchemy(app)
 
-from app import views, models
+app.config.from_object('config')
 
-api.add_resource(models.UserListAPI, '/api/v0.1/users')
-api.add_resource(models.UserAPI, '/api/v0.1/users/<int:id>', endpoint='User')
+from app import views, models

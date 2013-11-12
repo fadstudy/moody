@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from flask import abort
-from flask.ext.restful import Api, Resource, fields, marshal
-from app import db
+from flask.ext.restful import Resource, fields, marshal
+from app import auth, db
 
 ROLE_USER = 0
 ROLE_ADMIN = 1
@@ -149,6 +149,8 @@ user_fields = {
 }
 
 class UserListAPI(Resource):
+    decorators = [auth.login_required]
+
     def __init__(self):
         super(UserListAPI, self).__init__()
 
@@ -158,6 +160,8 @@ class UserListAPI(Resource):
 
 
 class UserAPI(Resource):
+    decorators = [auth.login_required]
+
     def __init__(self):
         super(UserAPI, self).__init__()
 

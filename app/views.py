@@ -1,11 +1,12 @@
 from datetime import datetime
 
-import facebook
-from flask import redirect, render_template, request, url_for
+from flask import jsonify, make_response, redirect, render_template, request, \
+                  url_for
 
-from app import api, app, db
+from app import api, app, auth, db
+import facebook
 from forms import BasicMoodForm, AdvancedMoodForm
-from models import User, Mood
+from models import User, UserAPI, UserListAPI, Mood
 
 # TODO: Hook these up via the config
 FACEBOOK_APP_ID = '498777246878058'
@@ -13,6 +14,17 @@ FACEBOOK_APP_NAME = 'The FAD Study'
 FACEBOOK_APP_SECRET = '02272a1ef565d2bbbec38c64e464094f'
 
 # TODO: Maybe think about moving these to another file.
+@auth.get_password
+def get_password(username):
+    if username == 'apiuser':
+        return 'letmeinbrah!'
+    return None
+
+@auth.error_handler
+def unauthorized():
+    return make_response(jsonify( { 'message': 'Unauthorized access' } ), 403)
+    # return 403 instead of 401 to prevent browsers from displaying the default auth dialog
+
 def channel():
     channel_url = url_for('get_channel', _external=True)
     channel_url = channel_url.replace('http:', '').replace('https:', '')
@@ -228,3 +240,6 @@ def promote_to_admin(user_id):
         except Exception as e:
             return '{0}'.format(e), 500
     return '', 404
+
+api.add_resource(UserListAPI, '/api/v0.1/users')
+api.add_resource(UserAPI, '/api/v0.1/users/<int:id>', endpoint='User')

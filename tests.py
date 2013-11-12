@@ -7,11 +7,16 @@ import unittest
 from coverage import coverage
 cov = coverage(branch = True, omit = ['flask/*', 'tests.py'])
 cov.start()
+from requests import get
 
 from config import BASE_DIRECTORY
 from app import app, db
 from app.models import User, Mood
 
+'''
+TODO:
+Inherit from a base class that handles the setUp and tearDown methods
+'''
 
 class ModelTests(unittest.TestCase):
     def setUp(self):
@@ -104,6 +109,41 @@ class ModelTests(unittest.TestCase):
 
     def if_user_has_answered_advanced_questions_recently(self):
         pass
+
+
+class APITests(unittest.TestCase):
+    def setUp(self):
+        app.config['TESTING'] = True
+        app.config['CSRF_ENABLED'] = False
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(BASE_DIRECTORY, 'test.db')
+        app.config['debug'] = True
+        db.create_all()
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+
+    def test_unauthorized_access(self):
+        response = get('http://localhost:5000/api/v0.1/users')
+
+        assert response is not None
+        assert response.status_code == 403
+
+        response = get('http://localhost:5000/api/v0.1/users', auth=('user',
+                                                                     'pass'))
+
+        assert response is not None
+        assert response.status_code == 403
+
+    def test_authorized_access(self):
+        response = get('http://localhost:5000/api/v0.1/users',
+                       auth=('apiuser', 'letmeinbrah!'))
+
+        assert response is not None
+        assert response.status_code == 200
+
+    # TODO: Figure out how to get the API to serve the test database so we can
+    # control and test the data returned...
 
 
 def main():
