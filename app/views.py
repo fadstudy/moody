@@ -7,8 +7,8 @@ from requests import get
 
 from app import api, app, auth, db
 from forms import AdvancedMoodForm, BasicMoodForm
-from models import Mood, MoodAPI, MoodListAPI, Token, User, UserAPI, \
-                   UserListAPI, UserMoodListAPI
+from models import Mood, MoodAPI, MoodListAPI, Token, TokenAPI, TokenListAPI, \
+                   User, UserAPI, UserListAPI, UserMoodListAPI, UserTokenListAPI
 
 # TODO: Hook these up via the config
 FACEBOOK_APP_ID = '498777246878058'
@@ -282,9 +282,13 @@ def promote_to_admin(user_id):
     return '', 404
 
 # TODO: Hook up version in config
-api.add_resource(UserListAPI, '/api/v0.2/users', endpoint='Users')
-api.add_resource(UserAPI, '/api/v0.2/users/<int:id>', endpoint='User')
-api.add_resource(UserMoodListAPI, '/api/v0.2/users/<int:id>/moods',
+api.add_resource(UserListAPI, '/api/v0.3/users', endpoint='Users')
+api.add_resource(UserAPI, '/api/v0.3/users/<int:id>', endpoint='User')
+api.add_resource(UserMoodListAPI, '/api/v0.3/users/<int:id>/moods',
                  endpoint='UserMoods')
-api.add_resource(MoodListAPI, '/api/v0.2/moods', endpoint='Moods')
-api.add_resource(MoodAPI, '/api/v0.2/moods/<int:id>', endpoint='Mood')
+api.add_resource(MoodListAPI, '/api/v0.3/moods', endpoint='Moods')
+api.add_resource(MoodAPI, '/api/v0.3/moods/<int:id>', endpoint='Mood')
+api.add_resource(UserTokenListAPI, '/api/v0.3/users/<int:id>/tokens',
+                 endpoint='UserTokens')
+api.add_resource(TokenListAPI, '/api/v0.3/tokens', endpoint='Tokens')
+api.add_resource(TokenAPI, '/api/v0.3/tokens/<int:id>', endpoint='Token')

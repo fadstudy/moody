@@ -137,11 +137,11 @@ class Token(db.Model):
     _type = db.Column(db.SmallInteger)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self, access_token, _type):
+    def __init__(self, access_token, token_type):
         self.access_token = access_token
-        self._type = _type
+        self._type = token_type
 
-        if _type == 1:
+        if token_type == 1:
             # Set the expiry from 2 months from now
             self.expiry_date = datetime.utcnow() + timedelta(hours=720)
         else:
@@ -167,10 +167,9 @@ user_fields = {
     'created_date': fields.String,
     'facebook_id': fields.String,
     'moods': fields.Url('UserMoods'),
-    # 'moods': fields.List(fields.String('Mood')),
     'id': fields.String,
     'last_visit': fields.String,
-    'short_term_access_token': fields.String
+    'tokens': fields.Url('UserTokens')
 }
 
 moods_fields = {
@@ -186,7 +185,23 @@ mood_fields = {
     'medication': fields.String,
     'medication_bipolar_related': fields.String,
     'hospital': fields.String,
-    'hospital_bipolar_related': fields.String
+    'hospital_bipolar_related': fields.String,
+    'user_uri': fields.Url('User')
+}
+
+tokens_fields = {
+    'access_token': fields.String,
+    'type': fields.String(attribute='_type'),
+    'uri': fields.Url('Token')
+}
+
+token_fields = {
+    'id' : fields.String,
+    'access_token' : fields.String,
+    'created_date' : fields.String,
+    'expiry_date' : fields.String,
+    'type' : fields.String(attribute='_type'),
+    'user_uri': fields.Url('User')
 }
 
 
@@ -251,3 +266,40 @@ class MoodAPI(Resource):
             abort(404)
 
         return { 'mood': marshal(mood, mood_fields) }
+
+
+class UserTokenListAPI(Resource):
+    decorators = [auth.login_required]
+
+    def __init__(self):
+        super(UserTokenListAPI, self).__init__()
+
+    def get(self, id):
+        return { 'tokens': map(lambda t: marshal(t, tokens_fields),
+                              Token.query.filter(Token.user_id == id).all()) }
+
+
+class TokenListAPI(Resource):
+    decorators = [auth.login_required]
+
+    def __init__(self):
+        super(TokenListAPI, self).__init__()
+
+    def get(self):
+        return { 'tokens': map(lambda t: marshal(t, tokens_fields),
+                              Token.query.all()) }
+
+
+class TokenAPI(Resource):
+    decorators = [auth.login_required]
+
+    def __init__(self):
+        super(TokenAPI, self).__init__()
+
+    def get(self, id):
+        token = db.session.query(Token).filter(Token.id == id).first()
+
+        if not token:
+            abort(404)
+
+        return { 'token': marshal(token, token_fields) }
