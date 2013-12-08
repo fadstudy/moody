@@ -1,12 +1,13 @@
 from datetime import datetime
 
+import facebook
 from flask import jsonify, make_response, redirect, render_template, request, \
                   url_for
 
 from app import api, app, auth, db
-import facebook
-from forms import BasicMoodForm, AdvancedMoodForm
-from models import User, UserAPI, UserListAPI, Mood
+from forms import AdvancedMoodForm, BasicMoodForm
+from models import Mood, MoodAPI, MoodListAPI, User, UserAPI, UserListAPI, \
+                   UserMoodListAPI
 
 # TODO: Hook these up via the config
 FACEBOOK_APP_ID = '498777246878058'
@@ -23,7 +24,6 @@ def get_password(username):
 @auth.error_handler
 def unauthorized():
     return make_response(jsonify( { 'message': 'Unauthorized access' } ), 403)
-    # return 403 instead of 401 to prevent browsers from displaying the default auth dialog
 
 def channel():
     channel_url = url_for('get_channel', _external=True)
@@ -72,14 +72,15 @@ def index():
 
             # Decide what form we want to show the user
             if user.has_answered_advanced_questions_recently():
-                form = BasicMoodForm()
+                mood_form = BasicMoodForm()
             else:
-                form = AdvancedMoodForm()
+                mood_form = AdvancedMoodForm()
 
             return render_template('index.html',
                                    access_token=user.short_term_access_token,
                                    app_id=FACEBOOK_APP_ID,
-                                   channel_url=channel(), form=form,
+                                   channel_url=channel(),
+                                   mood_form=mood_form,
                                    me=profile, name=FACEBOOK_APP_NAME,
                                    user=user)
         except facebook.GraphAPIError:
@@ -241,5 +242,9 @@ def promote_to_admin(user_id):
             return '{0}'.format(e), 500
     return '', 404
 
-api.add_resource(UserListAPI, '/api/v0.1/users')
-api.add_resource(UserAPI, '/api/v0.1/users/<int:id>', endpoint='User')
+# TODO: Hook up version in config
+api.add_resource(UserListAPI, '/api/v0.2/users', endpoint='Users')
+api.add_resource(UserAPI, '/api/v0.2/users/<int:id>', endpoint='User')
+api.add_resource(UserMoodListAPI, '/api/v0.2/users/<int:id>/moods', endpoint='UserMoods')
+api.add_resource(MoodListAPI, '/api/v0.2/moods', endpoint='Moods')
+api.add_resource(MoodAPI, '/api/v0.2/moods/<int:id>', endpoint='Mood')

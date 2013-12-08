@@ -69,7 +69,7 @@
         <div class="row" style='margin-top: 40px;'>
             <div class="col-md-12">
                 <form id='mood-form' class="form-horizontal" style='margin-left: 10px;' action="/moods/new/" method="post">
-                    {{ form.hidden_tag() }}
+                    {{ mood_form.hidden_tag() }}
                     <fieldset>
                         <legend style="padding-left: 20px;">{{ date }}</legend>
                         <input id='user-id' type='hidden' name='user-id'
@@ -78,9 +78,9 @@
                             <!-- Multiple Radios (inline) -->
                             <label style='padding-left: 0px; padding-right: 0px; text-align: left;'
                                    class="col-md-12 control-label" for="mood-radio">
-                                {{form.moods.label.text}}
+                                {{mood_form.moods.label.text}}
                             </label>
-                            {% for error in form.errors.moods %}
+                            {% for error in mood_form.errors.moods %}
                             <span style="color: red;">{{ error }}</span>
                             {% endfor %}
                             <br>
@@ -88,7 +88,7 @@
 
             <div class="form-group">
                 <div class="col-md-12">
-                {% for mood in form.moods %}
+                {% for mood in mood_form.moods %}
 
                 <label class="radio-inline" for="moods-{{loop.index-1}}" style='margin-left: 10px;'>
                   {{ mood(required='required') }}
@@ -99,17 +99,17 @@
               </div>
             </div>
 
-            {% if form.hospital is defined %}
+            {% if mood_form.hospital is defined %}
             <!-- Multiple Radios -->
             <label style='padding-left: 0px; padding-right: 0px; text-align: left;' class="col-md-12 control-label" for="hospital-radio">
-              {{form.hospital.label.text}}
+              {{mood_form.hospital.label.text}}
             </label>
-            {% for error in form.errors.hospital %}
+            {% for error in mood_form.errors.hospital %}
              <span style="color: red;">{{ error }}</span>
              {% endfor %}<br>
             <div class="form-group">
               <div class="col-md-4">
-                {% for option in form.hospital %}
+                {% for option in mood_form.hospital %}
               <div class="radio">
                 <label for="hospital-{{loop.index-1}}">
                 {{ option(required='required') }}
@@ -122,22 +122,22 @@
             <div class="form-group checkbox" id='hospital-reason' style='display: none; margin-bottom: 10px; margin-top:0px; padding-top:0px;'>
                 <div class="col-md-4">
                     <label>
-                        {{ form.hospital_reason }}
-                        {{ form.hospital_reason.label.text }}
+                        {{ mood_form.hospital_reason }}
+                        {{ mood_form.hospital_reason.label.text }}
                     </label>
                 </div>
             </div>
             <!-- Multiple Radios -->
             <label style='padding-left: 0px; padding-right: 0px; text-align: left;' class="col-md-12 control-label" for="medication-radio">
-              {{form.medication.label.text}}
+              {{mood_form.medication.label.text}}
             </label>
-            {% for error in form.errors.medication %}
+            {% for error in mood_form.errors.medication %}
              <span style="color: red;">{{ error }}</span>
              {% endfor %}<br>
             <div class="form-group">
               <div class="col-md-4">
 
-                {% for option in form.medication %}
+                {% for option in mood_form.medication %}
               <div class="radio">
                 <label for="medication-{{loop.index-1}}">
                  {{ option(required='required') }}
@@ -150,13 +150,13 @@
             <div class="form-group checkbox" id='medication-reason' style='display: none; margin-bottom: 10px; margin-top:0px; padding-top:0px;'>
                 <div class="col-md-4">
                     <label>
-                        {{ form.medication_reason }}
-                        {{ form.medication_reason.label.text }}
+                        {{ mood_form.medication_reason }}
+                        {{ mood_form.medication_reason.label.text }}
                     </label>
                 </div>
             </div>
 
-            {% for error in form.errors.hospital_reason %}
+            {% for error in mood_form.errors.hospital_reason %}
              <span style="color: red;">{{ error }}</span>
              {% endfor %}<br>
             {% endif %}

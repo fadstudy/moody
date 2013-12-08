@@ -8,6 +8,7 @@ ROLE_ADMIN = 1
 SHORT_TOKEN = 0
 LONG_TOKEN = 1
 
+
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -37,7 +38,8 @@ class User(db.Model):
             # will be None if unanswered (that's the default).
             if mood.medication >= 0 and mood.hospital >= 0:
                 days_since_answer = ((datetime.utcnow() + timedelta(hours=11)) \
-                                 - (mood.time_stamp + timedelta(hours=11))).days
+                                     - (mood.time_stamp +
+                                        timedelta(hours=11))).days
                 return False if days_since_answer >= 14 else True
         # If we reach this point it means the user hasn't answered the advanced
         # questions, so we return False.
@@ -109,7 +111,7 @@ class Mood(db.Model):
         return round(float(self.time_stamp.strftime('%s.%f')), 3)
 
     def __repr__(self):
-        return '\'{0}\': {1}'.format(self.unix_timestamp(), self.rating)
+        return '/api/v0.1/moods/{0}'.format(self.id)
 
 
 class Token(db.Model):
@@ -133,20 +135,39 @@ API Models
 '''
 
 users_fields = {
-    'facebook_id': fields.String,
-    'short_term_access_token': fields.String,
     'created_date': fields.String,
+    'facebook_id': fields.String,
     'last_visit': fields.String,
+    'short_term_access_token': fields.String,
     'uri': fields.Url('User')
 }
 
 user_fields = {
-    'facebook_id': fields.String,
-    'short_term_access_token': fields.String,
     'created_date': fields.String,
-    'last_visit': fields.String,
+    'facebook_id': fields.String,
+    'moods': fields.Url('UserMoods'),
+    # 'moods': fields.List(fields.String('Mood')),
     'id': fields.String,
+    'last_visit': fields.String,
+    'short_term_access_token': fields.String
 }
+
+moods_fields = {
+    'rating': fields.String,
+    'time_stamp': fields.String,
+    'uri': fields.Url('Mood')
+}
+
+mood_fields = {
+    'id': fields.String,
+    'rating': fields.String,
+    'time_stamp': fields.String,
+    'medication': fields.String,
+    'medication_bipolar_related': fields.String,
+    'hospital': fields.String,
+    'hospital_bipolar_related': fields.String
+}
+
 
 class UserListAPI(Resource):
     decorators = [auth.login_required]
@@ -171,4 +192,41 @@ class UserAPI(Resource):
         if not user:
             abort(404)
 
-        return { 'user': marshal(user, user_fields)}
+        return { 'user': marshal(user, user_fields) }
+
+
+class UserMoodListAPI(Resource):
+    decorators = [auth.login_required]
+
+    def __init__(self):
+        super(UserMoodListAPI, self).__init__()
+
+    def get(self, id):
+        return { 'moods': map(lambda m: marshal(m, moods_fields),
+                              Mood.query.filter(Mood.user_id == id).all()) }
+
+
+class MoodListAPI(Resource):
+    decorators = [auth.login_required]
+
+    def __init__(self):
+        super(MoodListAPI, self).__init__()
+
+    def get(self):
+        return { 'moods': map(lambda m: marshal(m, moods_fields),
+                              Mood.query.all()) }
+
+
+class MoodAPI(Resource):
+    decorators = [auth.login_required]
+
+    def __init__(self):
+        super(MoodAPI, self).__init__()
+
+    def get(self, id):
+        mood = db.session.query(Mood).filter(Mood.id == id).first()
+
+        if not mood:
+            abort(404)
+
+        return { 'mood': marshal(mood, mood_fields) }
