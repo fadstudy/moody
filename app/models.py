@@ -3,6 +3,8 @@ from flask import abort
 from flask.ext.restful import Resource, fields, marshal
 from app import auth, db
 
+# TODO: separate api models
+
 ROLE_USER = 0
 ROLE_ADMIN = 1
 SHORT_TOKEN = 0
@@ -31,6 +33,17 @@ class User(db.Model):
 
     def last_login_formatted(self):
         return (self.last_visit + timedelta(hours=11)).strftime('%A, %B %d')
+
+    def needs_to_exchange_for_long_term_token(self):
+        token = [i for i in self.tokens if i._type == LONG_TOKEN][0]
+
+        if not token:
+            return True
+
+        if ((token.expiry_date + timedelta(hours=720)) -
+            datetime.utcnow()).days <= 14:
+            return True
+        return False
 
     def has_answered_advanced_questions_recently(self):
         for mood in reversed(self.moods):
@@ -121,13 +134,21 @@ class Token(db.Model):
     access_token = db.Column(db.String(512))
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     expiry_date = db.Column(db.DateTime)
-    _type = db.Column(db.SmallInteger, default=LONG_TOKEN)
+    _type = db.Column(db.SmallInteger)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self, access_token):
+    def __init__(self, access_token, _type):
         self.access_token = access_token
-        # Set the expiry from 2 months from now
-        self.expiry_date = datetime.utcnow() + timedelta(hours=720)
+        self._type = _type
+
+        if _type == 1:
+            # Set the expiry from 2 months from now
+            self.expiry_date = datetime.utcnow() + timedelta(hours=720)
+        else:
+            self.expiry_date = datetime.utcnow()
+
+    def __repr__(self):
+        return 'Token: {0}'.format(self.user_id)
 
 
 '''

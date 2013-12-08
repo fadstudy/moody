@@ -21,20 +21,6 @@ def change_user_role(user_id, role=0):
     db.session.commit()
 
 '''
-Exchange the hourly token for an extended two month token.
-'''
-def extend_token(client_id, short_term_token):
-    payload = {'grant_type': 'fb_exchange_token',
-               'client_id': config.FB_APP_ID,
-               'client_secret': config.FB_APP_SECRET,
-               'fb_exchange_token': short_term_token}
-
-    result = get('https://graph.facebook.com/oauth/access_token',
-                 params=payload).content
-
-    return result.split('=')[1].split('&')[0]
-
-'''
 Send a notifcation to the user.
 
 This method specifies a default message,  but the message can be overriden.
