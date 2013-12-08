@@ -19,14 +19,9 @@ class User(db.Model):
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     last_visit = db.Column(db.DateTime, default=datetime.utcnow)
     role = db.Column(db.SmallInteger, default=ROLE_USER)
-    short_term_access_token = db.Column(db.String(512))
 
     moods = db.relationship('Mood')
     tokens = db.relationship('Token')
-
-    def get_access_token(self):
-        return self.short_term_access_token
-        # return self.tokens[0].access_token
 
     def created_date_formatted(self):
         return (self.created_date + timedelta(hours=11)).strftime('%A, %B %d')
@@ -159,7 +154,6 @@ users_fields = {
     'created_date': fields.String,
     'facebook_id': fields.String,
     'last_visit': fields.String,
-    'short_term_access_token': fields.String,
     'uri': fields.Url('User')
 }
 

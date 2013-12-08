@@ -66,6 +66,13 @@ def get_user():
             user.tokens.append(Token(exchange_token(token['access_token']),
                                      LONG_TOKEN))
         else:
+            # This is only to handle legacy database users on the heroku
+            # platform
+            if len(user.tokens) == 0:
+                user.tokens.append(Token(token['access_token'], SHORT_TOKEN))
+                user.tokens.append(Token(exchange_token(token['access_token']),
+                                         LONG_TOKEN))
+
             # Update the user's short term access token
             Token.query.filter(Token.user_id == user.id
                                and Token._type == SHORT_TOKEN) \
