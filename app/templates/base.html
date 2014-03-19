@@ -17,7 +17,7 @@
     <meta content="" property="og:url" />
     <meta content="" property="og:image" />
     <meta content="" property="og:site_name" />
-    <meta property="og:description" content="My First App" />
+    <meta property="og:description" content="Facebook use in Affective Disorders" />
     <meta content="{{app_id}}" property="fb:app_id" />
 
     <!-- We get the name of the app out of the information fetched -->
@@ -76,8 +76,10 @@
             margin-left: 4px;
         }
     </style>
+
 </head>
 <body>
+
     <script type="text/javascript">
         window.fbAsyncInit = function() {
             FB.init({
@@ -110,10 +112,10 @@
     </script>
 
     <div class="container">
-        {% block topbar %}{% endblock %}
+        {% block topbar %} {% endblock %}
         <footer class="footer" style='margin-top: 50px;'>
-            <span class="pull-left">&copy; The FAD Study 2013</span>
-            <button class="btn btn-link pull-right" data-toggle="modal" data-target="#feedback-modal">
+            <span class="pull-left">&copy; The FAD Study {{ year }}</span>
+            <button class="btn btn-link pull-right" data-target="#feedback-modal" data-toggle="modal" >
                 Give your feedback, or report issues with the site.
             </button>
         </footer>
@@ -127,11 +129,11 @@
             });
 
             $('#log-out').click(function() {
-                console.log('clicked...')
                 FB.logout(function(response) { });
                 return false;
             });
         });
     </script>
+
 </body>
 </html>

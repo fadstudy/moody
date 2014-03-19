@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 from flask import abort
 from flask.ext.restful import Resource, fields, marshal
 from app import auth, db
+import config
+
 
 # TODO: separate api models
 
@@ -23,22 +25,51 @@ class User(db.Model):
     moods = db.relationship('Mood')
     tokens = db.relationship('Token')
 
+    def get_short_term_token(self):
+        try:
+            return [t for t in self.tokens if t._type == config.SHORT_TOKEN][0]
+        except IndexError:
+            return None
+
+    def set_short_term_token(self, token):
+        try:
+            self.tokens.remove(self.get_short_term_token())
+        except ValueError:
+            pass
+
+        self.tokens.append(Token(token=token, token_type=config.SHORT_TOKEN))
+
+    def get_long_term_token(self):
+        try:
+            return [t for t in self.tokens if t._type == config.LONG_TOKEN][0]
+        except IndexError:
+            return None
+
+    def set_long_term_token(self, token):
+        try:
+            self.tokens.remove(self.get_long_term_token())
+        except ValueError:
+            pass
+
+        self.tokens.append(Token(token=token, token_type=config.LONG_TOKEN))
+
+    def needs_to_exchange_for_long_term_token(self):
+        token = self.get_long_term_token()
+        if token is None or (token.expiry_date - datetime.utcnow()).days <= 14:
+            return True
+        return False
+
+    def is_admin(self):
+        return True if user.role == config.ROLE_ADMIN else False
+
+    def update_last_visit(self):
+        self.last_visit = datetime.utcnow()
+
     def created_date_formatted(self):
         return (self.created_date + timedelta(hours=11)).strftime('%A, %B %d')
 
     def last_login_formatted(self):
         return (self.last_visit + timedelta(hours=11)).strftime('%A, %B %d')
-
-    def needs_to_exchange_for_long_term_token(self):
-        token = [i for i in self.tokens if i._type == LONG_TOKEN][0]
-
-        if not token:
-            return True
-
-        if ((token.expiry_date + timedelta(hours=720)) -
-            datetime.utcnow()).days <= 14:
-            return True
-        return False
 
     def has_answered_advanced_questions_recently(self):
         for mood in reversed(self.moods):
@@ -132,18 +163,16 @@ class Token(db.Model):
     _type = db.Column(db.SmallInteger)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self, access_token, token_type):
-        self.access_token = access_token
+    def __init__(self, token, token_type):
+        self.access_token = token
         self._type = token_type
+        self.expiry_date = datetime.utcnow()
 
         if token_type == 1:
-            # Set the expiry from 2 months from now
-            self.expiry_date = datetime.utcnow() + timedelta(hours=720)
-        else:
-            self.expiry_date = datetime.utcnow()
+            self.expiry_date = self.expiry_date + timedelta(days=60)
 
     def __repr__(self):
-        return 'Token: {0}'.format(self.user_id)
+        return 'Token: {0} - {1}'.format(self._type, self.expiry_date)
 
 
 '''

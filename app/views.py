@@ -10,13 +10,20 @@ from forms import AdvancedMoodForm, BasicMoodForm
 from models import Mood, MoodAPI, MoodListAPI, Token, TokenAPI, TokenListAPI, \
                    User, UserAPI, UserListAPI, UserMoodListAPI, UserTokenListAPI
 
+import config
+from utils import channel, get_current_user
+
 # TODO: Hook these up via the config
 FACEBOOK_APP_ID = '498777246878058'
 FACEBOOK_APP_NAME = 'The FAD Study'
 FACEBOOK_APP_SECRET = '02272a1ef565d2bbbec38c64e464094f'
+API_VERSION = 'v0.3'
 
 SHORT_TOKEN = 0
 LONG_TOKEN = 1
+
+issue_robot_username = 'fadstudyrobot'
+issue_robot_password = 'fad$tudyr0b0t'
 
 # TODO: Maybe think about moving these to another file.
 @auth.get_password
@@ -29,92 +36,21 @@ def get_password(username):
 def unauthorized():
     return make_response(jsonify( { 'message': 'Unauthorized access' } ), 403)
 
-def channel():
-    channel_url = url_for('get_channel', _external=True)
-    channel_url = channel_url.replace('http:', '').replace('https:', '')
-
-    return channel_url
-
-def get_short_term_token(user):
-    return [i for i in user.tokens if i._type == SHORT_TOKEN][0].access_token
-
-def exchange_token(short_term_token):
-    payload = { 'grant_type': 'fb_exchange_token',
-                'client_id': FACEBOOK_APP_ID,
-                'client_secret': FACEBOOK_APP_SECRET,
-                'fb_exchange_token': short_term_token }
-
-    result = get('https://graph.facebook.com/oauth/access_token',
-                 params=payload).content
-
-    return result.split('=')[1].split('&')[0]
-
-def get_user():
-    token = facebook.get_user_from_cookie(request.cookies, FACEBOOK_APP_ID,
-                                          FACEBOOK_APP_SECRET)
-
-    try:
-        user = User.query.filter(User.facebook_id == token['uid']).first()
-
-        # If the user doesn't exist, add them to the database.
-        if not user:
-            user = User(facebook_id=token['uid'])
-            db.session.add(user)
-
-            # Add the new user's short and long term tokens to the DB.
-            user.tokens.append(Token(token['access_token'], SHORT_TOKEN))
-            user.tokens.append(Token(exchange_token(token['access_token']),
-                                     LONG_TOKEN))
-        else:
-            # This is only to handle legacy database users on the heroku
-            # platform
-            if len(user.tokens) == 0:
-                user.tokens.append(Token(token['access_token'], SHORT_TOKEN))
-                user.tokens.append(Token(exchange_token(token['access_token']),
-                                         LONG_TOKEN))
-
-            # Update the user's short term access token
-            Token.query.filter(Token.user_id == user.id
-                               and Token._type == SHORT_TOKEN) \
-                              .update({ 'access_token': token['access_token'],
-                                        'created_date': datetime.utcnow(),
-                                        'expiry_date': datetime.utcnow() })
-
-            # Check and exchange for a long term access token
-            if user.needs_to_exchange_for_long_term_token():
-                print 'Exchanging for long token'
-                long_term_token = Token(exchange_token(get_short_term_token(user
-                                                      )), LONG_TOKEN)
-                user.tokens.append(long_term_token)
-
-            # Update the user's last_visit property
-            User.query.filter(User.facebook_id == token['uid']) \
-                             .update({ "last_visit": datetime.utcnow() })
-    except:
-        user = User.query.filter(User.facebook_id == token).first()
-        User.query.filter(User.facebook_id == token) \
-                         .update({ "last_visit": datetime.utcnow() })
-
-    db.session.commit()
-    return user
-
-def is_user_admin(user):
-    return True if user.role == 1 else False
-
 @app.route('/channel.html', methods=['GET', 'POST'])
 def get_channel():
     return render_template('channel.html')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    user = get_user()
+    user = get_current_user()
+
+    date = datetime.now().strftime('%A, %B %d')
+    year = datetime.utcnow().year
 
     if user:
         try:
-            short_term_token = get_short_term_token(user)
-
-            graph = facebook.GraphAPI(short_term_token)
-            profile = graph.get_object("me")
+            graph = facebook.GraphAPI(user.get_short_term_token().access_token)
+            profile = graph.get_object('me')
 
             # Decide what form we want to show the user
             if user.has_answered_advanced_questions_recently():
@@ -123,26 +59,29 @@ def index():
                 mood_form = AdvancedMoodForm()
 
             return render_template('index.html',
-                                   access_token=short_term_token,
+                                   access_token=user.get_short_term_token() \
+                                                    .access_token,
                                    app_id=FACEBOOK_APP_ID,
-                                   channel_url=channel(),
+                                   channel_url=channel(), date=date,
                                    mood_form=mood_form,
                                    me=profile, name=FACEBOOK_APP_NAME,
-                                   user=user)
+                                   user=user, year=year)
         except facebook.GraphAPIError:
             pass
 
     return render_template('login.html', app_id=FACEBOOK_APP_ID,
-                           channel_url=channel(), name=FACEBOOK_APP_NAME)
+                           channel_url=channel(), name=FACEBOOK_APP_NAME,
+                           year=year)
 
 @app.route('/admin/')
 def admin():
-    current_user = get_user()
+    current_user = get_current_user()
 
-    if current_user and is_user_admin(current_user):
+    if current_user and current_user.is_admin():
         try:
-            graph = facebook.GraphAPI(get_short_term_token(current_user))
-            profile = graph.get_object("me")
+            graph = facebook.GraphAPI(current_user.get_short_term_token() \
+                                      .access_token)
+            profile = graph.get_object('me')
 
             users = User.query.all()[:5]
 
@@ -160,12 +99,13 @@ def admin():
 
 @app.route('/admin/users/')
 def users():
-    current_user = get_user()
+    current_user = get_current_user()
 
-    if current_user and is_user_admin(current_user):
+    if current_user and current_user.is_admin:
         try:
-            graph = facebook.GraphAPI(get_short_term_token(current_user))
-            profile = graph.get_object("me")
+            graph = facebook.GraphAPI(current_user.get_short_term_token() \
+                                      .access_token)
+            profile = graph.get_object('me')
 
             users = User.query.all()
 
@@ -184,12 +124,13 @@ def users():
 @app.route('/admin/users/<int:user_id>/')
 @app.route('/admin/users/<int:user_id>')
 def user(user_id):
-    current_user = get_user()
+    current_user = get_current_user()
 
-    if current_user and is_user_admin(current_user):
+    if current_user and current_user.is_admin():
         try:
-            graph = facebook.GraphAPI(get_short_term_token(current_user))
-            profile = graph.get_object("me")
+            graph = facebook.GraphAPI(current_user.get_short_term_token() \
+                                      .access_token)
+            profile = graph.get_object('me')
 
             user = User.query.filter(User.facebook_id == str(user_id)).first()
 
@@ -209,14 +150,14 @@ def user(user_id):
 @app.route('/moods/new', methods=['POST'])
 @app.route('/moods/new/', methods=['POST'])
 def post_mood():
-    current_user = get_user()
+    current_user = get_current_user()
 
     if current_user:
-        short_term_token = get_short_term_token(current_user)
+        short_term_token = current_user.get_short_term_token().access_token
 
         try:
             graph = facebook.GraphAPI(short_term_token)
-            profile = graph.get_object("me")
+            profile = graph.get_object('me')
 
             # Decide what form we want to show the user
             if current_user.has_answered_advanced_questions_recently():
@@ -276,26 +217,31 @@ def post_mood():
 # The URI will be PUT: /users/:user/
 @app.route('/make_admin/<int:user_id>')
 def promote_to_admin(user_id):
-    current_user = get_user()
+    current_user = get_current_user()
 
-    if current_user and is_user_admin(current_user):
+    if current_user and current_user.is_admin():
         try:
             User.query.filter(User.facebook_id == str(user_id)).\
-                             update({"role": request.args.get('role')})
+                             update({ 'role': request.args.get('role') })
             db.session.commit()
             return '', 200
         except Exception as e:
             return '{0}'.format(e), 500
     return '', 404
 
-# TODO: Hook up version in config
-api.add_resource(UserListAPI, '/api/v0.3/users', endpoint='Users')
-api.add_resource(UserAPI, '/api/v0.3/users/<int:id>', endpoint='User')
-api.add_resource(UserMoodListAPI, '/api/v0.3/users/<int:id>/moods',
-                 endpoint='UserMoods')
-api.add_resource(MoodListAPI, '/api/v0.3/moods', endpoint='Moods')
-api.add_resource(MoodAPI, '/api/v0.3/moods/<int:id>', endpoint='Mood')
-api.add_resource(UserTokenListAPI, '/api/v0.3/users/<int:id>/tokens',
-                 endpoint='UserTokens')
-api.add_resource(TokenListAPI, '/api/v0.3/tokens', endpoint='Tokens')
-api.add_resource(TokenAPI, '/api/v0.3/tokens/<int:id>', endpoint='Token')
+api.add_resource(UserListAPI, '/api/{0}/users'.format(API_VERSION),
+                 endpoint='Users')
+api.add_resource(UserAPI, '/api/{0}/users/<int:id>'.format(API_VERSION),
+                 endpoint='User')
+api.add_resource(UserMoodListAPI, '/api/{0}/users/<int:id>/moods'
+                 .format(API_VERSION), endpoint='UserMoods')
+api.add_resource(MoodListAPI, '/api/{0}/moods'.format(API_VERSION),
+                 endpoint='Moods')
+api.add_resource(MoodAPI, '/api/{0}/moods/<int:id>'.format(API_VERSION),
+                 endpoint='Mood')
+api.add_resource(UserTokenListAPI, '/api/{0}/users/<int:id>/tokens'
+                 .format(API_VERSION), endpoint='UserTokens')
+api.add_resource(TokenListAPI, '/api/{0}/tokens'.format(API_VERSION),
+                 endpoint='Tokens')
+api.add_resource(TokenAPI, '/api/{0}/tokens/<int:id>'.format(API_VERSION),
+                 endpoint='Token')

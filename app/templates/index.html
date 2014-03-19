@@ -50,7 +50,7 @@
               padding-left: 1px;
               padding-left: -;
               margin-left: 115px;
-          ">Please record your response for {{ date }}</h5>
+          ">Please record your response for today.</h5>
           {% else %}
           <h5 id='sub-message' class='text-muted' style="
               margin-top: 15px;
@@ -66,12 +66,12 @@
 
     {% if user.latest_mood() == False %}
     <section id="response">
-        <div class="row" style='margin-top: 40px;'>
+        <div class="row" style='margin-top: 10px;'>
             <div class="col-md-12">
                 <form id='mood-form' class="form-horizontal" style='margin-left: 10px;' action="/moods/new/" method="post">
                     {{ mood_form.hidden_tag() }}
                     <fieldset>
-                        <legend style="padding-left: 20px;">{{ date }}</legend>
+                        <legend style="padding-left: 10px;">{{ date }}</legend>
                         <input id='user-id' type='hidden' name='user-id'
                                value='{{ me['id'] }}'>
                         <div style='margin-left: 0px;'>
