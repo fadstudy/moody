@@ -4,3 +4,11 @@ python:
 install:
 - pip install -r requirements.txt
 script: nosetests
+deploy:
+  provider: heroku
+  api_key:
+    secure: MSU3zaQIuLCwhvbKMgYZ5LoHiIf4UJbBSlariLfeELgPjGaCLDR41B8G05AwL8sUekMYKWo5UHaDp2V4AkIzDNJBdoyEMoEOya6NshQPIi8+jk9C2Crzjf+LmldXHsF/vme6vVUysHZseWeDK5ApbrtOUMhY+gAtdnQNtOfnvzE=
+  app: !binary |-
+    G1tE
+  on:
+    repo: fadstudy/moody

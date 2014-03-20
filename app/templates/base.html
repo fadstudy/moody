@@ -6,30 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A study of Facebook use in Affective Disorders">
     <meta name="author" content="RMIT University">
+    <link rel="shortcut icon" href="/static/images/fad_study_logo.png">
 
     <!-- These are Open Graph tags.  They add meta data to your  -->
-    <!-- site that facebook uses when your content is shared     -->
-    <!-- over facebook.  You should fill these tags in with      -->
-    <!-- your data.  To learn more about Open Graph, visit       -->
-    <!-- 'https://developers.facebook.com/docs/opengraph/'       -->
-    <meta content="" property="og:title" />
-    <meta content="" property="og:type" />
-    <meta content="" property="og:url" />
-    <meta content="" property="og:image" />
-    <meta content="" property="og:site_name" />
-    <meta property="og:description" content="Facebook use in Affective Disorders" />
-    <meta content="{{app_id}}" property="fb:app_id" />
+    <meta property="og:title" content="The FAD Study" />
+    <meta property="og:site_name" content="The FAD Study" />
+    <meta property="og:url" content="thefadstudy.com.au" />
+    <meta property="og:description" content="A study of Facebook use in Affective Disorders" />
+    <meta property="og:type" content="website" />
+    <meta property="fb:app_id" content="{{app_id}}" />
 
     <!-- We get the name of the app out of the information fetched -->
     <title>{{ name }}</title>
 
     <!-- Styles -->
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" href="/static/css/social-buttons-3.css">
-    <link rel="stylesheet" href="/static/css/cal-heatmap.css">
-
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -40,9 +32,6 @@
     <!-- Scripts -->
     <script src="/static/javascript/jquery.min.js"></script>
     <script src='/static/javascript/bootstrap.min.js'></script>
-    <script src='/static/javascript/d3.v3.min.js'></script>
-    <script src='/static/javascript/cal-heatmap.js'></script>
-    <script src='/static/javascript/moment.min.js'></script>
 
     <!--[if IE]>
       <script type="text/javascript">
@@ -76,8 +65,8 @@
             margin-left: 4px;
         }
     </style>
-
 </head>
+
 <body>
 
     <script type="text/javascript">
@@ -115,9 +104,6 @@
         {% block topbar %} {% endblock %}
         <footer class="footer" style='margin-top: 50px;'>
             <span class="pull-left">&copy; The FAD Study {{ year }}</span>
-            <button class="btn btn-link pull-right" data-target="#feedback-modal" data-toggle="modal" >
-                Give your feedback, or report issues with the site.
-            </button>
         </footer>
     </div>
 

@@ -2,201 +2,240 @@
 
 {% block topbar %}
 
-<div class="jumbotron">
-  <h1 style='font-weight: 100;'>Facebook use in Affective Disorders</h1>
+<style>
+@font-face {
+  font-family: "Merriweather";
+  font-style: normal;
+  font-weight: 300;
+  src: local("Merriweather Light"),
+       local("Merriweather-Light"),
+       url("http://themes.googleusercontent.com/static/fonts/merriweather/v6/ZvcMqxEwPfh2qDWBPxn6nmB7wJ9CoPCp9n30ZBThZ1I.woff")
+       format("woff");
+}
 
-<div class="fb-login-button" data-size='xlarge' data-perms="read_friendlists, read_insights, read_mailbox, read_requests, read_stream, xmpp_login, user_online_presence, friends_online_presence, manage_notifications, publish_actions, publish_stream"></div>
-<!--   <div id="login-flow" data-size: 'xlarge'>
-    <fb:login-button perms="read_friendlists, read_insights, read_mailbox, read_requests, read_stream, xmpp_login, user_online_presence, friends_online_presence, manage_notifications, publish_actions, publish_stream" show-faces="true"></fb:login-button>
-  </div> -->
+p {font-family: "Merriweather"; text-align: justify; line-height: 1.5em;
+color: #3A3A3A; font-size: 22px; margin-bottom: 25px;}
+
+h2.text-muted {
+margin-bottom: 20px; font-weight: 100;
+}
+
+img {
+    filter: url(/static/images/filters.svg#grayscale); /* Firefox 3.5+ */
+    filter: gray; /* IE6-9 */
+    -webkit-filter: grayscale(1); /* Google Chrome, Safari 6+ & Opera 15+ */
+}
+
+img:hover {
+    filter: none;
+    -webkit-filter: grayscale(0);
+}
+
+.logos .lead{
+    margin-top: 45px;
+    text-align: center;
+}
+
+.signup {
+  margin: 50px 0px 25px;
+}
+</style>
+
+<div class="row lead" style="margin-top: 40px;">
+    <div class="col-md-8 col-md-offset-2">
+        <h1 style='font-weight: 200; text-align: center; font-size: 63px;'>
+            The FAD Study
+        </h1>
+        <h2 style='font-weight: 100; text-align: center;'>
+            Facebook use in Affective Disorders
+        </h2>
+    </div>
 </div>
-<div class="row">
-    <div class="col-md-4"><img src="/static/images/maprc_logo.png" alt="" style="
-    height: 163px;
-"></div>
-    <div class="col-md-4"><img src="/static/images/monash_logo.png" alt="" style="
-    margin-top: 67px;
-    width: 327px;
-"></div>
-    <div class="col-md-4"><img src="/static/images/rmit_logo.png" alt="" style="
-    margin-top: 60px;
-    margin-left: 65px;
-"></div>
+
+<div class="row signup">
+    <div class="col-md-12" style="text-align: center;">
+        <div class="fb-login-button" data-size='xlarge'
+         data-perms="read_friendlists, read_insights, read_mailbox, read_requests, read_stream, xmpp_login,
+                     user_online_presence, friends_online_presence, manage_notifications, publish_actions,
+                     publish_stream">Sign up
+        </div>
+    </div>
 </div>
+
 <div class="row">
     <div class="col-md-12">
-        <h2 class='text-muted' style='font-weight: 100;'>What is the FAD study?</h2>
-        <p style='font-size: 22px; margin-top: 15px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; margin-bottom: 20px; font-size: 20px; font-weight: 200; line-height: 26px;'>
-            The FAD study – Facebook use in Affective Disorders - aims to analyse if the use of social media sites, such as Facebook, changes just before people with bipolar disorder relapse with a manic or depressive episode.
-        </p>
-        <p style='font-size: 22px; margin-top: 15px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; margin-bottom: 20px; font-size: 20px; font-weight: 200; line-height: 26px;'>
-            It is a research project undertaken by a medical student of Monash university in Melbourne and Professors and Doctor’s of the Alfred Hospital and the Royal Melbourne Institute of Technology (RMIT) in conjunction with the Monash-Alfred Psychiatry Research Centre (MAPRC). We are currently recruiting patients who have been diagnosed with Bipolar disorder by an Australian Doctor between the ages of 18-30 who use Facebook more than 3 times a week to participate in this study.
+        <h2 class='text-muted'>What is the FAD Study?</h2>
+        <p>
+            The FAD Study, Facebook use in Affective Disorders, analyses the changes in social media use by an
+            individual before and during a bipolar relapse. This project is being undertaken by researchers at Monash
+            Alfred Psychiatry Research Centre (MAPrc) and the School of Intelligent Systems at RMIT.  It is open to
+            participants who have been diagnosed with bipolar disorder who are between the ages of 18-30, have been
+            diagnosed with bipolar disorder by an Australian doctor, and who use Facebook.
         </p>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <h2 class='text-muted' style='font-weight: 100;'>
+        <h2 class='text-muted'>
             What would I have to do if I’m in the study?
         </h2>
-        <p style='font-size: 22px; margin-top: 15px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; margin-bottom: 20px; font-size: 20px; font-weight: 200; line-height: 26px;'>
-            All that you need to do is log in to this web page with your Facebook account and agree to the required permissions. We will then provide daily notifications for you to rate how your mood has been by clicking a box between 1 and 10. It would be ideal if you could to this each new day that you use Facebook, but at a minimum we would hope for an update twice a week. We have made sure this will take only a few seconds to do.
+        <p>
+            Participants will consent to this study by logging into this page with their Facebook account and ticking
+            the “I consent” checkboxes at the bottom of the consent form.  After this, the FAD study application will
+            be added to the participant’s Facebook app panel. Participants will then be asked for dates of previous
+            episodes of mania or depression. The individual can choose not to fill this in at the time, and if they do
+            so they will be prompted to complete this later. The entire enrollment process should take less than 5
+            minutes.
+        </p>
+        <p>
+            The study will send daily notifications to participants asking them to rate their mood. Ideally mood will
+            be recorded each new day that Facebook is used. Mood rating should take about 15 seconds.
         </p>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <h2 class='text-muted' style='font-weight: 100;'>
-            What would I have to do if I’m in the study?
-        </h2>
-        <p style='font-size: 22px; margin-top: 15px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; margin-bottom: 20px; font-size: 20px; font-weight: 200; line-height: 26px;'>
-            All that you need to do is log in to this web page with your Facebook account and agree to the required permissions. We will then provide daily notifications for you to rate how your mood has been by clicking a box between 1 and 10. It would be ideal if you could do this each new day that you use Facebook, but at a minimum we would hope for an update twice a week. We have made sure this will take only a few seconds to do.
-        </p>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <h2 class='text-muted' style='font-weight: 100;'>
-            How long will the study go for?
-        </h2>
-        <p style='font-size: 22px; margin-top: 15px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; margin-bottom: 20px; font-size: 20px; font-weight: 200; line-height: 26px;'>
-            The study will run for between 6 and 12 months depending on how many people the study recruits. Once the study is over, you will automatically be removed from the FAD study application. You may revoke your permissions from the FAD study application at any time through your Facebook privacy settings if you wish to opt out of the study. There will be specific instructions on installing and uninstalling the application in an email we send to you once you have registered for this study.
-        </p>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <h2 class='text-muted' style='font-weight: 100;'>
+        <h2 class='text-muted'>
             What information is being collected?
         </h2>
-        <p style='font-size: 22px; margin-top: 15px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; margin-bottom: 20px; font-size: 20px; font-weight: 200; line-height: 26px;'>
-            The FAD study app will record all metadata associated with your Facebook use. For example, it will log the time (e.g. 1:30 pm) you make a post on Facebook. It’s very important that you understand that the app will not be able to read your comments and neither will the researchers. The app only logs the metadata.
-        </p>
-
-        <p style='font-size: 22px; margin-top: 15px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; margin-bottom: 20px; font-size: 20px; font-weight: 200; line-height: 26px;'>
-            This study will not record any personally identifiable information from your Facebook page. That is, we will not record your name, profile pictures, etc... from Facebook. To the researchers, you are an ID in a database. The researchers will also collect the results of your surveys regarding your mood.
+        <p>
+            The researchers will collect mood survey data as it is collected by this application.  It will record the
+            metadata (e.g. time and date) for when the participant is active on Facebook.  Activity is defined as a
+            comment, a like, a post, an upload or a message.  Only metadata is recorded.  It will not be possible for
+            researchers to read or view the content of comments, messages, likes, posts or photos. For the dates of
+            previous relapse episodes, the same metadata of Facebook activity will be collected.
         </p>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <h2 class='text-muted' style='font-weight: 100;'>
+        <h2 class='text-muted'>
             Why is the information being collected?
         </h2>
-        <p style='font-size: 22px; margin-top: 15px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; margin-bottom: 20px; font-size: 20px; font-weight: 200; line-height: 26px;'>
-            This information is being collected to see if there is a link between how you are using Facebook and your mood at the time of use.
+        <p>
+            This information is being collected to see if it is possible to predict an episode of mania by analyzing
+            changes in Facebook use.  Data on previous relapse episodes will be collected and compared to current data
+            in order to have an accurate image of how facebook use varies during a relapse episode.This information is
+            being collected to see if there is a link between how you are using Facebook and your mood at the time of
+            use.
         </p>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <h2 class='text-muted' style='font-weight: 100;'>
-            What this study won’t do
-        </h2>
-        <p style='font-size: 22px; margin-top: 15px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; margin-bottom: 20px; font-size: 20px; font-weight: 200; line-height: 26px;'>
-            This study does not require you to “add as friend” the researchers or Monash university or any other related parties. It doesn’t require you to change your medication, or take any new medications.
-        </p>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <h2 class='text-muted' style='font-weight: 100;'>
-            Will I get paid for being in this study?
-        </h2>
-        <p style='font-size: 22px; margin-top: 15px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; margin-bottom: 20px; font-size: 20px; font-weight: 200; line-height: 26px;'>
-            There are no financial incentives for being in this study.
-        </p>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <h2 class='text-muted' style='font-weight: 100;'>
-            Privacy
-        </h2>
-        <p style='font-size: 22px; margin-top: 15px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; margin-bottom: 20px; font-size: 20px; font-weight: 200; line-height: 26px;'>
-            As already stated, Our research will not look at what it is that you are saying on social media sites but rather will look at only the times that you make a post . The application that you download for this research will not be labeled or have any mention of your diagnosis or the study that you are part of. Your data will be de-identified and stored on a hard drive disk. It will only be stored for the duration of the study (approximately 1 year) plus 7 years afterwards (a research requirement) and will not be used for any further research. Only the researchers will be able to see the times that you make posts. You may access your information at any time.
-        </p>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <h2 class='text-muted' style='font-weight: 100;'>
+        <h2 class='text-muted'>
             Who is collecting this information and how do I contact them?
         </h2>
-        <p style='font-size: 22px; margin-top: 15px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; margin-bottom: 20px; font-size: 20px; font-weight: 200; line-height: 26px;'>
-            This information is being collected by the monash-alfred psychiatric research centre. You can contact the researchers of this study via <a href='mailto:researchers@thefadstudy.com.au'>researchers@thefadstudy.com.au</a> You do not need to “friend” any of the researchers on the Facebook.com website or other study subjects to be part of this research.
+        <p>
+            This information is being collected by the Monash Alfred Psychiatry Research Centre (MAPrc) and School of
+            Intelligent Systems at RMIT. The researchers of this study can be contacted via email at
+            <a href="mailto:researchers@thefadstudy.com.au">researchers@thefadstudy.com.au</a>.
         </p>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <h2 class='text-muted' style='font-weight: 100;'>
+        <h2 class='text-muted'>
             Publication of Data
         </h2>
-        <p style='font-size: 22px; margin-top: 15px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; margin-bottom: 20px; font-size: 20px; font-weight: 200; line-height: 26px;'>
-            If the researchers publish any reports on this study, all participant data will be de-identified. You will be able to see the results of this study online at www.thefadstudy.com.au We will also email you informing you that this link is available once our research is complete.
+        <p>
+            If the researchers publish any reports on this study, all participant data will be de-identified.
         </p>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <h2 class='text-muted' style='font-weight: 100;'>
-            Possible risks of being in this study
+        <h2 class='text-muted'>
+            Will I get paid for being in this study?
         </h2>
-        <p style='font-size: 22px; margin-top: 15px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; margin-bottom: 20px; font-size: 20px; font-weight: 200; line-height: 26px;'>
-            The researchers believe there are no foreseeable risks to participants. Bipolar patients are regularly asked to review their mood.
+        <p>
+            There are no financial incentives for participating in this study.
         </p>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <h2 class='text-muted' style='font-weight: 100;'>
-            What happens once I consent?
+        <h2 class='text-muted'>
+            Possible risks of being in this study 
         </h2>
-        <p style='font-size: 22px; margin-top: 15px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; margin-bottom: 20px; font-size: 20px; font-weight: 200; line-height: 26px;'>
-            Once you have consented, the researchers will email you with instructions on downloading the app.
+        <p>
+            The researchers believe there are no tangible risks to participants.
         </p>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <h2 class='text-muted' style='font-weight: 100;'>
-            Consenting Process
+        <h2 class='text-muted'>
+            How long will the study go for?
         </h2>
-        <p style='font-size: 22px; margin-top: 15px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; margin-bottom: 20px; font-size: 20px; font-weight: 200; line-height: 26px;'>
-            The research team assumes that you give full informed consent to participate in this research project for the studies entirety if you follow the steps below in checking each box if you agree with the corresponding statement, filling out your details and pressing the “I consent” button.
+        <p>
+            The study will run approximately 12 months. Once the study is over, the program will stop accessing
+            participants’ Facebook data.
         </p>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <h2 class='text-muted' style='font-weight: 100;'>
-        Withdrawing Consent
+        <h2 class='text-muted'>
+            Withdrawing Consent
         </h2>
-        <p style='font-size: 22px; margin-top: 15px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; margin-bottom: 20px; font-size: 20px; font-weight: 200; line-height: 26px;'>
-            If for any reason you wish to withdraw from the project, you may do so by emailing as at researchers@thefadstudy.com.au. At any point, if you wish to stop being a participant in this study, you can just delete our application from your Facebook account. If you consent, we will send you a follow up email about how you can do this if you wish to at any stage. If you have any further questions, would like clarification of part of our study, or would like to get in contact with the researchers for any reason, please have absolutely no hesitation in contacting us at researchers@thefadstudy.com.au and we will endeavor to return your email within 24-hours. If you decide for whatever reason to remove the application and stop participating in the study, the researchers will still use the data that they had gathered up until that point unless you specifically send them an email within one month of having deleted the program requesting them to delete your data.
+        <p>
+            A participant can opt out of the study at any time by removing the FAD study app from their Facebook
+            permissions. If a participant is inactive for two months all permissions to access the individual’s data
+            will lapse. In these instances the collected data will be used in the study. Unless the participant
+            specifically sends an email to
+            <a href="mailto:researchers@thefadstudy.com.au">researchers@thefadstudy.com.au</a> within one month of
+            having deleted the program requesting for their data to be deleted. The researchers will endeavor to return
+            all emails within 24-hours. Please do not hesitate to email the researchers at this address with any
+            further questions.
         </p>
     </div>
 </div>
-<!--   <div id="fb-root"></div>
-  <h1>Welcome</h1>
-  <div id="login-flow">
-    <fb:login-button perms="email,offline_access" show-faces="true"></fb:login-button>
-  </div> -->
+
+<div class="row">
+    <div class="col-md-12">
+        <h2 class='text-muted'>
+            Privacy
+        </h2>
+        <p>
+            This study does not require anybody to “add as friend” the researchers or any other parties.  The FAD Study
+            will not look at the content of posts on social media sites but at the times that of activity. The
+            application that is added to the participant’s Facebook app panel for this research will not have any
+            mention of a diagnosis. All data will be de-identified and stored on a hard drive disk. It will be stored
+            for the duration of the study (approximately 1 year) plus 7 years afterwards (a research requirement) and
+            will not be used for any further research. Only the researchers will be able to see the data. As part of
+            the research, participants name will be added to a secure database that is associated with a reference
+            number. The researchers analyzing the data will see only the reference number and not the participant's
+            name.
+        </p>
+    </div>
+</div>
+
+<div class="row logos">
+    <div class="col-md-6">
+        <img src="/static/images/maprc_logo.png" alt="Monash Alfred Psychiatry Research Centre (MAPrc)"
+             style="height: 163px; display: block; margin-left: auto; margin-right: auto; ">
+        <p class="text-muted" style="text-align: center; font-family: helvetica; font-size: 12px;">
+            <strong>Monash Alfred Psychiatry Research Centre (MAPrc)</strong>
+        </p>
+    </div>
+    <div class="col-md-6">
+        <img src="/static/images/rmit_logo.png" alt="RMIT School of Intelligent Systems"
+             style="margin-top: 60px; margin-left: 65px; display: block; margin-left: auto; margin-right: auto;">
+        <p class="text-muted" style="margin-top: 47px; text-align: center; font-family: helvetica; font-size: 12px;">
+            <strong>RMIT School of Intelligent Systems</strong>
+        </p>
+    </div>
+</div>
 
 {% endblock %}
 
