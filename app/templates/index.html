@@ -8,14 +8,6 @@
             <li style='margin-top: 12px;'>
                 <a style='padding: 0px; display:inline; hover: none;' href='http://facebook.com/{{ me["id"] }}'>{{ me['name'] }}</a>
             </li>
-            {% if user.role == 1 %}
-            <li style='margin-top: 2px; margin-left: 2px; color: black;'>
-                <a class='nav-link' href="/admin/" style='color: black;'
-                   data-toggle="tooltip" title="Admin">
-                    <i class="icon-lock icon-large"></i>
-                </a>
-            </li>
-            {% endif %}
             <li style='margin-top: 2px; margin-left: 2px; color: black;'>
                 <a id='log-out' class='nav-link' href="#" style='color: black;'
                    data-toggle="tooltip" title="Log out">
