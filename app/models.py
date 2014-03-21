@@ -1,16 +1,10 @@
 from datetime import datetime, timedelta
+
 from flask import abort
 from flask.ext.restful import Resource, fields, marshal
+
 from app import auth, db
-import config
-
-
-# TODO: separate api models
-
-ROLE_USER = 0
-ROLE_ADMIN = 1
-SHORT_TOKEN = 0
-LONG_TOKEN = 1
+from config import LONG_TERM_TOKEN, SHORT_TERM_TOKEN, ROLE_ADMIN, ROLE_USER
 
 
 class User(db.Model):
@@ -27,7 +21,7 @@ class User(db.Model):
 
     def get_short_term_token(self):
         try:
-            return [t for t in self.tokens if t._type == config.SHORT_TOKEN][0]
+            return [t for t in self.tokens if t._type == SHORT_TERM_TOKEN][0]
         except IndexError:
             return None
 
@@ -37,11 +31,11 @@ class User(db.Model):
         except ValueError:
             pass
 
-        self.tokens.append(Token(token=token, token_type=config.SHORT_TOKEN))
+        self.tokens.append(Token(token=token, token_type=SHORT_TERM_TOKEN))
 
     def get_long_term_token(self):
         try:
-            return [t for t in self.tokens if t._type == config.LONG_TOKEN][0]
+            return [t for t in self.tokens if t._type == LONG_TERM_TOKEN][0]
         except IndexError:
             return None
 
@@ -51,7 +45,7 @@ class User(db.Model):
         except ValueError:
             pass
 
-        self.tokens.append(Token(token=token, token_type=config.LONG_TOKEN))
+        self.tokens.append(Token(token=token, token_type=LONG_TERM_TOKEN))
 
     def needs_to_exchange_for_long_term_token(self):
         token = self.get_long_term_token()
@@ -60,7 +54,7 @@ class User(db.Model):
         return False
 
     def is_admin(self):
-        return True if user.role == config.ROLE_ADMIN else False
+        return True if user.role == ROLE_ADMIN else False
 
     def update_last_visit(self):
         self.last_visit = datetime.utcnow()
@@ -175,9 +169,9 @@ class Token(db.Model):
         return 'Token: {0} - {1}'.format(self._type, self.expiry_date)
 
 
-'''
+"""
 API Models
-'''
+"""
 
 users_fields = {
     'created_date': fields.String,

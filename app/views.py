@@ -6,30 +6,18 @@ from flask import jsonify, make_response, redirect, render_template, request, \
 from requests import get
 
 from app import api, app, auth, db
+from config import FACEBOOK_APP_ID, FACEBOOK_APP_NAME, LONG_TERM_TOKEN, \
+                   SHORT_TERM_TOKEN, API_USERNAME, API_PASSWORD, API_VERSION
 from forms import AdvancedMoodForm, BasicMoodForm
 from models import Mood, MoodAPI, MoodListAPI, Token, TokenAPI, TokenListAPI, \
-                   User, UserAPI, UserListAPI, UserMoodListAPI, UserTokenListAPI
-
-import config
+                   User, UserAPI, UserListAPI, UserMoodListAPI, \
+                   UserTokenListAPI
 from utils import channel, get_current_user
 
-# TODO: Hook these up via the config
-FACEBOOK_APP_ID = '498777246878058'
-FACEBOOK_APP_NAME = 'The FAD Study'
-FACEBOOK_APP_SECRET = '02272a1ef565d2bbbec38c64e464094f'
-API_VERSION = 'v0.3'
-
-SHORT_TOKEN = 0
-LONG_TOKEN = 1
-
-issue_robot_username = 'fadstudyrobot'
-issue_robot_password = 'fad$tudyr0b0t'
-
-# TODO: Maybe think about moving these to another file.
 @auth.get_password
 def get_password(username):
-    if username == 'apiuser':
-        return 'letmeinbrah!'
+    if username == API_USERNAME:
+        return API_PASSWORD
     return None
 
 @auth.error_handler
@@ -72,80 +60,6 @@ def index():
     return render_template('login.html', app_id=FACEBOOK_APP_ID,
                            channel_url=channel(), name=FACEBOOK_APP_NAME,
                            year=year)
-
-@app.route('/admin/')
-def admin():
-    current_user = get_current_user()
-
-    if current_user and current_user.is_admin():
-        try:
-            graph = facebook.GraphAPI(current_user.get_short_term_token() \
-                                      .access_token)
-            profile = graph.get_object('me')
-
-            users = User.query.all()[:5]
-
-            return render_template('admin.html', app_id=FACEBOOK_APP_ID,
-                                   channel_url=channel(), me=profile,
-                                   name=FACEBOOK_APP_NAME, user=current_user,
-                                   users=users)
-        except facebook.GraphAPIError:
-            pass
-    elif not current_user:
-        return render_template('login.html', app_id=FACEBOOK_APP_ID,
-                               channel_url=channel(), name=FACEBOOK_APP_NAME)
-    else:
-        return redirect('/')
-
-@app.route('/admin/users/')
-def users():
-    current_user = get_current_user()
-
-    if current_user and current_user.is_admin:
-        try:
-            graph = facebook.GraphAPI(current_user.get_short_term_token() \
-                                      .access_token)
-            profile = graph.get_object('me')
-
-            users = User.query.all()
-
-            return render_template('users.html', app_id=FACEBOOK_APP_ID,
-                                   channel_url=channel(), me=profile,
-                                   name=FACEBOOK_APP_NAME, user=current_user,
-                                   users=users)
-        except facebook.GraphAPIError:
-            pass
-    elif not current_user:
-        return render_template('login.html', app_id=FACEBOOK_APP_ID,
-                               channel_url=channel(), name=FACEBOOK_APP_NAME)
-    else:
-        return redirect('/')
-
-@app.route('/admin/users/<int:user_id>/')
-@app.route('/admin/users/<int:user_id>')
-def user(user_id):
-    current_user = get_current_user()
-
-    if current_user and current_user.is_admin():
-        try:
-            graph = facebook.GraphAPI(current_user.get_short_term_token() \
-                                      .access_token)
-            profile = graph.get_object('me')
-
-            user = User.query.filter(User.facebook_id == str(user_id)).first()
-
-            # TODO: rename chungus
-            return render_template('user.html', app_id=FACEBOOK_APP_ID,
-                                   channel_url=channel(), me=profile,
-                                   name=FACEBOOK_APP_NAME, user=user,
-                                   chungus=current_user)
-        except facebook.GraphAPIError:
-            pass
-    elif not current_user:
-        return render_template('login.html', app_id=FACEBOOK_APP_ID,
-                               channel_url=channel(), name=FACEBOOK_APP_NAME)
-    else:
-        return redirect('/')
 
 @app.route('/moods/new', methods=['POST'])
 @app.route('/moods/new/', methods=['POST'])
@@ -211,23 +125,6 @@ def post_mood():
 
     return render_template('login.html', app_id=FACEBOOK_APP_ID,
                            channel_url=channel(), name=FACEBOOK_APP_NAME)
-
-# TODO: Fix this method up to be a PUT request where we pass the user object
-# with the updated role to the method.  From there we just update the method.
-# The URI will be PUT: /users/:user/
-@app.route('/make_admin/<int:user_id>')
-def promote_to_admin(user_id):
-    current_user = get_current_user()
-
-    if current_user and current_user.is_admin():
-        try:
-            User.query.filter(User.facebook_id == str(user_id)).\
-                             update({ 'role': request.args.get('role') })
-            db.session.commit()
-            return '', 200
-        except Exception as e:
-            return '{0}'.format(e), 500
-    return '', 404
 
 api.add_resource(UserListAPI, '/api/{0}/users'.format(API_VERSION),
                  endpoint='Users')

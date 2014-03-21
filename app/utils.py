@@ -1,9 +1,10 @@
-from flask import request, url_for
-import config
-from requests import get
 import facebook
-from models import User
+from flask import request, url_for
+from requests import get
+
 from app import db
+from config import FACEBOOK_APP_ID, FACEBOOK_APP_SECRET
+from models import User
 
 def channel():
     channel_url = url_for('get_channel', _external=True)
@@ -12,10 +13,10 @@ def channel():
     return channel_url
 
 def exchange_token(short_term_token):
-    """Exchange a short term token for a long term token through Facebook."""
+    """ Exchange a short term token for a long term token through Facebook."""
     payload = { 'grant_type': 'fb_exchange_token',
-                'client_id': config.FACEBOOK_APP_ID,
-                'client_secret': config.FACEBOOK_APP_SECRET,
+                'client_id': FACEBOOK_APP_ID,
+                'client_secret': FACEBOOK_APP_SECRET,
                 'fb_exchange_token': short_term_token }
 
     response = get('https://graph.facebook.com/oauth/access_token',
@@ -33,9 +34,8 @@ def get_current_user():
     """Get the currently logged in user."""
 
     # Get user id and access token from the client's cookie.
-    token = facebook.get_user_from_cookie(request.cookies,
-                                          config.FACEBOOK_APP_ID,
-                                          config.FACEBOOK_APP_SECRET)
+    token = facebook.get_user_from_cookie(request.cookies, FACEBOOK_APP_ID,
+                                          FACEBOOK_APP_SECRET)
 
     try:
         user = User.query.filter(User.facebook_id == token['uid']).first()
