@@ -9,15 +9,17 @@
   font-weight: 300;
   src: local("Merriweather Light"),
        local("Merriweather-Light"),
-       url("http://themes.googleusercontent.com/static/fonts/merriweather/v6/ZvcMqxEwPfh2qDWBPxn6nmB7wJ9CoPCp9n30ZBThZ1I.woff")
+       url("https://themes.googleusercontent.com/static/fonts/merriweather/v6/ZvcMqxEwPfh2qDWBPxn6nmB7wJ9CoPCp9n30ZBThZ1I.woff")
        format("woff");
 }
 
-p {font-family: "Merriweather"; text-align: justify; line-height: 1.5em;
-color: #3A3A3A; font-size: 22px; margin-bottom: 25px;}
-
-h2.text-muted {
-margin-bottom: 20px; font-weight: 100;
+p {
+    font-family: "Merriweather";
+    text-align: justify;
+    line-height: 1.5em;
+    color: #3A3A3A;
+    font-size: 22px;
+    margin-bottom: 25px;
 }
 
 img {
@@ -29,26 +31,64 @@ img {
 img:hover {
     filter: none;
     -webkit-filter: grayscale(0);
+    color: red;
 }
 
-.logos .lead{
+img.centre {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.lead h1 {
+    font-weight: 200; text-align: center; font-size: 63px;
+}
+
+h2 {
+    font-weight: 100;
+}
+
+h2.text-muted {
+    margin-bottom: 20px;
+}
+
+.logos, .lead {
     margin-top: 45px;
     text-align: center;
 }
+
+.logos p {
+    font-family: helvetica;
+    font-size: 12px;
+    text-align: center;
+}
+
+.logos a:hover {
+    text-decoration:none;
+}
+
+.rmit-logo p {
+    margin-top: 47px;
+}
+
+.rmit-logo img {
+    margin-top: 60px;
+}
+
+.maprc-logo img {
+    height: 163px;
+}
+
 
 .signup {
   margin: 50px 0px 25px;
 }
 </style>
 
-<div class="row lead" style="margin-top: 40px;">
+<div class="row lead">
     <div class="col-md-8 col-md-offset-2">
-        <h1 style='font-weight: 200; text-align: center; font-size: 63px;'>
-            The FAD Study
-        </h1>
-        <h2 style='font-weight: 100; text-align: center;'>
-            Facebook use in Affective Disorders
-        </h2>
+        <h1> The FAD Study </h1>
+        <h2> Facebook use in Affective Disorders </h2>
     </div>
 </div>
 
@@ -57,7 +97,8 @@ img:hover {
         <div class="fb-login-button" data-size='xlarge'
          data-perms="read_friendlists, read_insights, read_mailbox, read_requests, read_stream, xmpp_login,
                      user_online_presence, friends_online_presence, manage_notifications, publish_actions,
-                     publish_stream">Sign up
+                     publish_stream">
+            Sign up
         </div>
     </div>
 </div>
@@ -221,19 +262,22 @@ img:hover {
 </div>
 
 <div class="row logos">
-    <div class="col-md-6">
-        <img src="/static/images/maprc_logo.png" alt="Monash Alfred Psychiatry Research Centre (MAPrc)"
-             style="height: 163px; display: block; margin-left: auto; margin-right: auto; ">
-        <p class="text-muted" style="text-align: center; font-family: helvetica; font-size: 12px;">
-            <strong>Monash Alfred Psychiatry Research Centre (MAPrc)</strong>
-        </p>
+    <div class="col-md-6 maprc-logo">
+        <a href="http://maprc.org.au/">
+            <img class="centre" src="/static/images/maprc_logo.png"
+                 alt="Monash Alfred Psychiatry Research Centre (MAPrc)">
+            <p class="text-muted">
+                <strong>Monash Alfred Psychiatry Research Centre (MAPrc)</strong>
+            </p>
+        </a>
     </div>
-    <div class="col-md-6">
-        <img src="/static/images/rmit_logo.png" alt="RMIT School of Intelligent Systems"
-             style="margin-top: 60px; margin-left: 65px; display: block; margin-left: auto; margin-right: auto;">
-        <p class="text-muted" style="margin-top: 47px; text-align: center; font-family: helvetica; font-size: 12px;">
-            <strong>RMIT School of Intelligent Systems</strong>
-        </p>
+    <div class="col-md-6 rmit-logo">
+        <a href="http://www.rmit.edu.au/compsci/intelligentsystems">
+            <img src="/static/images/rmit_logo.png" alt="RMIT School of Intelligent Systems" class="centre">
+            <p class="text-muted">
+                <strong>RMIT School of Intelligent Systems</strong>
+            </p>
+        </a>
     </div>
 </div>
 
