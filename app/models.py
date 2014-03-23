@@ -15,6 +15,7 @@ class User(db.Model):
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     last_visit = db.Column(db.DateTime, default=datetime.utcnow)
     role = db.Column(db.SmallInteger, default=ROLE_USER)
+    consented = db.Column(db.Boolean, default=False)
 
     moods = db.relationship('Mood')
     tokens = db.relationship('Token')

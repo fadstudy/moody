@@ -8,7 +8,7 @@ from requests import get
 from app import api, app, auth, db
 from config import FACEBOOK_APP_ID, FACEBOOK_APP_NAME, LONG_TERM_TOKEN, \
                    SHORT_TERM_TOKEN, API_USERNAME, API_PASSWORD, API_VERSION
-from forms import AdvancedMoodForm, BasicMoodForm
+from forms import AdvancedMoodForm, BasicMoodForm, ConsentForm
 from models import Mood, MoodAPI, MoodListAPI, Token, TokenAPI, TokenListAPI, \
                    User, UserAPI, UserListAPI, UserMoodListAPI, \
                    UserTokenListAPI
@@ -35,7 +35,12 @@ def index():
     date = datetime.now().strftime('%A, %B %d')
     year = datetime.utcnow().year
 
-    if user:
+    if not user:
+        return render_template('login.html', app_id=FACEBOOK_APP_ID,
+                               channel_url=channel(), name=FACEBOOK_APP_NAME,
+                               year=year)
+
+    if user.consented:
         try:
             graph = facebook.GraphAPI(user.get_short_term_token().access_token)
             profile = graph.get_object('me')
@@ -55,11 +60,38 @@ def index():
                                    me=profile, name=FACEBOOK_APP_NAME,
                                    user=user, year=year)
         except facebook.GraphAPIError:
-            pass
+            return render_template('login.html', app_id=FACEBOOK_APP_ID,
+                                   channel_url=channel(),
+                                   name=FACEBOOK_APP_NAME, year=year)
+    else:
+        graph = facebook.GraphAPI(user.get_short_term_token().access_token)
+        profile = graph.get_object('me')
 
-    return render_template('login.html', app_id=FACEBOOK_APP_ID,
-                           channel_url=channel(), name=FACEBOOK_APP_NAME,
-                           year=year)
+        return render_template('consent.html', consent_form=ConsentForm(),
+                               me=profile, user=user)
+
+
+@app.route('/consent/', methods=['POST'])
+def post_consent():
+    current_user = get_current_user()
+
+    if current_user:
+        short_term_token = current_user.get_short_term_token().access_token
+
+        graph = facebook.GraphAPI(short_term_token)
+        profile = graph.get_object('me')
+
+        # Decide what form we want to show the user
+        if not current_user.consented:
+            form = ConsentForm()
+
+            if form.validate_on_submit():
+                # TODO (Mitch): validate that each checkbox is true
+                current_user.consented = True
+                db.session.commit()
+
+                return redirect('/')
+
 
 @app.route('/moods/new', methods=['POST'])
 @app.route('/moods/new/', methods=['POST'])

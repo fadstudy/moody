@@ -28,7 +28,7 @@ class AdvancedMoodForm(Form):
     medication_reason = BooleanField('Was it related to this condition?')
 
 
-class ConsentToStudyForm(Form):
+class ConsentForm(Form):
     project_consent = BooleanField('I consent to this research project as \
                                    part of an understanding that the times I \
                                    use facebook will be analysed by MAPRC and \
@@ -47,7 +47,7 @@ class ConsentToStudyForm(Form):
                                      validators=[Required()])
 
 
-class Episode(Form):
+class EpisodeForm(Form):
     date_of_episode = TextField('Date of episode', validators=[Required()])
     nature_of_episode = RadioField('Nature of episode', choices=[('0', 'Mania'),
                                    ('1', 'Depression')],

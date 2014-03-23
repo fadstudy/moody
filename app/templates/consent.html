@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block topbar %}
+
+<style>
+.row {
+    margin-top: 10px;
+}
+</style>
+
+<section id="consent">
+    <div class="row">
+        <div class="col-md-12">
+            <form role="form" action="/consent/" method="post">
+                {{ consent_form.hidden_tag() }}
+                <input id='user-id' type='hidden' name='user-id' value='{{ me['id'] }}'>
+                <fieldset>
+                    <legend>Consent</legend>
+                    <div class="checkbox">
+                        <label>
+                            <label>
+                                {{ consent_form.project_consent }}
+                                {{ consent_form.project_consent.label.text }}
+                            </label>
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                                {{ consent_form.age_consent }}
+                                {{ consent_form.age_consent.label.text }}
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                                {{ consent_form.diagnosed_consent }}
+                                {{ consent_form.diagnosed_consent.label.text }}
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-default disabled">Submit</button>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+$(function() {
+    // Determine if all checkboxes are checked.  If so, enable the submit
+    // button.
+    $("input[type=checkbox]").on('change', function() {
+        if ($('input[type=checkbox]:checked').length ===
+            $('input[type=checkbox]').length) {
+            $('.disabled').removeClass('disabled');
+        } else {
+            $('button[type=submit]').addClass('disabled');
+        }
+    });
+});
+</script>
+
+{% endblock %}
