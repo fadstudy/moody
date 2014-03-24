@@ -163,7 +163,7 @@ Custom error pages
 """
 @app.errorhandler(500)
 def internal_server_error(e):
-    return render_template('500.html'), 500
+    return render_template('500.html', year=datetime.utcnow().year), 500
 
 """
 API Resouces

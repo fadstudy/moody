@@ -1,5 +1,46 @@
 {% extends "base.html" %}
 
 {% block topbar %}
-<h1>An error has occurred...</h1>
+
+<style>
+    @font-face {
+      font-family: "Merriweather";
+      font-style: normal;
+      font-weight: 300;
+      src: local("Merriweather Light"),
+           local("Merriweather-Light"),
+           url("https://themes.googleusercontent.com/static/fonts/merriweather/v6/ZvcMqxEwPfh2qDWBPxn6nmB7wJ9CoPCp9n30ZBThZ1I.woff")
+           format("woff");
+    }
+
+    p {
+        font-family: "Merriweather";
+        text-align: justify;
+        line-height: 1.5em;
+        color: #3A3A3A;
+        font-size: 22px;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+
+    .lead {
+        margin-top: 45px;
+        text-align: center;
+    }
+</style>
+
+<div class="row lead">
+    <div class="col-md-8 col-md-offset-2">
+        <h1> The FAD Study </h1>
+        <h2> Facebook use in Affective Disorders </h2>
+
+    </div>
+</div>
+
+<div class="row lead">
+    <div class="col-md-8 col-md-offset-2">
+        <p>500 - An error has occured</p>
+    </div>
+</div>
+
 {% endblock %}
