@@ -8,7 +8,7 @@ from requests import get
 from app import api, app, auth, db
 from config import FACEBOOK_APP_ID, FACEBOOK_APP_NAME, LONG_TERM_TOKEN, \
                    SHORT_TERM_TOKEN, API_USERNAME, API_PASSWORD, API_VERSION
-from forms import AdvancedMoodForm, BasicMoodForm, ConsentForm
+from forms import AdvancedMoodForm, BasicMoodForm, ConsentForm, EpisodeForm
 from models import Mood, MoodAPI, MoodListAPI, Token, TokenAPI, TokenListAPI, \
                    User, UserAPI, UserListAPI, UserMoodListAPI, \
                    UserTokenListAPI
@@ -71,6 +71,7 @@ def index():
                                me=profile, user=user)
 
 
+@app.route('/consent', methods=['POST'])
 @app.route('/consent/', methods=['POST'])
 def post_consent():
     current_user = get_current_user()
@@ -90,8 +91,42 @@ def post_consent():
                 current_user.consented = True
                 db.session.commit()
 
-                return redirect('/')
+                return redirect('/questionnaire/')
 
+@app.route('/questionnaire', methods=['GET'])
+@app.route('/questionnaire/', methods=['GET'])
+def questionnaire():
+    user = get_current_user()
+
+    if user and user.consented:
+        graph = facebook.GraphAPI(user.get_short_term_token().access_token)
+        profile = graph.get_object('me')
+
+        return render_template('questionnaire.html', form=EpisodeForm(),
+                               me=profile, name=FACEBOOK_APP_NAME, user=user,
+                               year=datetime.utcnow().year)
+
+    return redirect('/')
+
+@app.route('/questionnaire', methods=['POST'])
+@app.route('/questionnaire/', methods=['POST'])
+def questionnaire_submit():
+    user = get_current_user()
+
+    if user and user.consented:
+        graph = facebook.GraphAPI(user.get_short_term_token().access_token)
+        profile = graph.get_object('me')
+
+        form = EpisodeForm()
+        if form.validate_on_submit():
+            # TODO (Mitch): map the form to the model etc...
+            pass
+        else:
+            return render_template('questionnaire.html', form=form,
+                                   me=profile, name=FACEBOOK_APP_NAME, user=user,
+                                   year=datetime.utcnow().year)
+
+    return redirect('/')
 
 @app.route('/moods/new', methods=['POST'])
 @app.route('/moods/new/', methods=['POST'])
@@ -163,7 +198,8 @@ Custom error pages
 """
 @app.errorhandler(500)
 def internal_server_error(e):
-    return render_template('500.html', year=datetime.utcnow().year), 500
+    return render_template('500.html', year=datetime.utcnow().year,
+                           name=FACEBOOK_APP_NAME), 500
 
 """
 API Resouces

@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block topbar %}
+
+<style>
+    .container {
+        margin-top: 60px;
+    }
+
+    .form-horizontal .control-label{
+        /* text-align:right; */
+        text-align: left;
+    }
+</style>
+
+<section id="todo">
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-horizontal" role="form" action="/questionnaire/" method="post">
+                {{ form.hidden_tag() }}
+                <input id='user-id' type='hidden' name='user-id' value='{{ me['id'] }}'>
+                <fieldset>
+                    <legend>Retrospective Questionnaire</legend>
+
+                    <p id="form-message">
+                        Please detail any previous episodes to assist with gathering background information for the study.
+                    </p>
+
+                    <div id="questionnaire" style="display: none;">
+                        <div class="form-group">
+                            <label class="col-md-12 control-label">{{ form.date_of_episode.label.text }}</label>
+                            <div class="col-md-4" style="margin-top: 15px;">
+                                {{ form.date_of_episode(id='episode-date', class_='form-control',
+                                   placeholder='e.g. 15/08/2012', required='required') }}
+                                {% for error in form.errors.date_of_episode %}
+                                    <span class="help-block" style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-12 control-label" for="nature_of_episode-radio">
+                                {{ form.nature_of_episode.label.text }}
+                            </label>
+                            <div class="col-md-4">
+                                {% for option in form.nature_of_episode %}
+                                    <div class="radio">
+                                        <label for="nature_of_episode-{{ loop.index-1 }}">
+                                            {{ option(required='required') }}
+                                            {{ option.label.text }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                                {% for error in form.errors.nature_of_episode %}
+                                    <span class="help-block" style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-12 control-label" for="hospitalisation-radio">
+                                {{ form.hospitalisation.label.text }}
+                            </label>
+                            <div class="col-md-4">
+                                {% for option in form.hospitalisation %}
+                                    <div class="radio">
+                                        <label for="hospitalisation-{{ loop.index-1 }}">
+                                            {{ option(required='required') }}
+                                            {{ option.label.text }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                                {% for error in form.errors.hospitalisation %}
+                                    <span class="help-block" style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-12 control-label" for="medication_change-radio">
+                                {{ form.medication_change.label.text }}
+                            </label>
+                            <div class="col-md-4">
+                                {% for option in form.medication_change %}
+                                    <div class="radio">
+                                        <label for="medication_change-{{ loop.index-1 }}">
+                                            {{ option(required='required') }}
+                                            {{ option.label.text }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                                {% for error in form.errors.medication_change %}
+                                    <span class="help-block" style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-12 control-label" for="suicidal_ideation-radio">
+                                {{ form.suicidal_ideation.label.text }}
+                            </label>
+                            <div class="col-md-4">
+                                {% for option in form.suicidal_ideation %}
+                                    <div class="radio">
+                                        <label for="suicidal_ideation-{{ loop.index-1 }}">
+                                            {{ option(required='required') }}
+                                            {{ option.label.text }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                                {% for error in form.errors.suicidal_ideation %}
+                                    <span class="help-block" style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-8">
+                                <button type="submit" class="btn btn-primary">Save this episode</button>
+                                <button id="back" class="btn btn-default">Back</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </form>
+
+            <div class="row action-group">
+                <div class="col-md-8">
+                    <button id="detail" class="btn btn-primary">Detail an episode</button>
+                    <button id="pass" class="btn btn-default">I'll do this later</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+$(function() {
+    function showQuestionnaire() {
+        $('#detail').html('Save this episode');
+        $('#pass').html('Back');
+        $('#form-message').html('Please detail any previous episodes to assist with gathering background information for the study.');
+        $('#questionnaire').show();
+        $('.action-group').hide();
+    }
+
+    function hideQuestionnaire() {
+        $('#detail').html('Detail an episode');
+        $('#pass').html('I\'ll do this later');
+        $('form')[0].reset();
+        $('#questionnaire').hide();
+        $('.action-group').show();
+    }
+
+    $('#detail').on('click', function (event) {
+        showQuestionnaire();
+        event.preventDefault();
+    });
+
+    $('#back').on('click', function (event) {
+        hideQuestionnaire();
+        event.preventDefault();
+    });
+
+    $('#pass').on('click', function (event) {
+        window.location.href = 'http://thefadstudy.com.au';
+    });
+
+    $(document).on('click', 'a', function (event) {
+        (this.id === 'again') ? showQuestionnaire() : window.location.href = 'http://thefadstudy.com.au';
+        event.preventDefault();
+    })
+
+    // $('form').submit(function (event) {
+    //     $('#form-message').html('<strong>Thanks!</strong> You can <a href="#" id="again">list another episode</a> or <a href="#">continue</a>.');
+    //     hideQuestionnaire();
+    //     $('.action-group').hide();
+
+    //     event.preventDefault();
+    // });
+
+    $('#episode-date').datepicker({
+        format: "dd/mm/yyyy",
+        endDate: "today",
+        startView: 1,
+        autoclose: true
+    });
+});
+</script>
+
+{% endblock %}

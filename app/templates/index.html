@@ -64,8 +64,7 @@
                     {{ mood_form.hidden_tag() }}
                     <fieldset>
                         <legend style="padding-left: 10px;">{{ date }}</legend>
-                        <input id='user-id' type='hidden' name='user-id'
-                               value='{{ me['id'] }}'>
+                        <input id='user-id' type='hidden' name='user-id' value='{{ me['id'] }}'>
                         <div style='margin-left: 0px;'>
                             <!-- Multiple Radios (inline) -->
                             <label style='padding-left: 0px; padding-right: 0px; text-align: left;'
@@ -76,20 +75,21 @@
                             <span style="color: red;">{{ error }}</span>
                             {% endfor %}
                             <br>
+                        </div>
 
 
-            <div class="form-group">
-                <div class="col-md-12">
-                {% for mood in mood_form.moods %}
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                {% for mood in mood_form.moods %}
 
-                <label class="radio-inline" for="moods-{{loop.index-1}}" style='margin-left: 10px;'>
-                  {{ mood(required='required') }}
-                  {{ mood.label.text }}
-                </label>
+                                <label class="radio-inline" for="moods-{{loop.index-1}}" style='margin-left: 10px;'>
+                                    {{ mood(required='required') }}
+                                    {{ mood.label.text }}
+                                </label>
 
-                {% endfor %}
-              </div>
-            </div>
+                                {% endfor %}
+                            </div>
+                        </div>
 
             {% if mood_form.hospital is defined %}
             <!-- Multiple Radios -->
