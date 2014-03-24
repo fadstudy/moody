@@ -158,6 +158,16 @@ def post_mood():
     return render_template('login.html', app_id=FACEBOOK_APP_ID,
                            channel_url=channel(), name=FACEBOOK_APP_NAME)
 
+"""
+Custom error pages
+"""
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500
+
+"""
+API Resouces
+"""
 api.add_resource(UserListAPI, '/api/{0}/users'.format(API_VERSION),
                  endpoint='Users')
 api.add_resource(UserAPI, '/api/{0}/users/<int:id>'.format(API_VERSION),
