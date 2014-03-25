@@ -17,6 +17,7 @@ class User(db.Model):
     role = db.Column(db.SmallInteger, default=ROLE_USER)
     consented = db.Column(db.Boolean, default=False)
 
+    episodes = db.relationship('Episode')
     moods = db.relationship('Mood')
     tokens = db.relationship('Token')
 
@@ -168,6 +169,19 @@ class Token(db.Model):
 
     def __repr__(self):
         return 'Token: {0} - {1}'.format(self._type, self.expiry_date)
+
+
+class Episode(db.Model):
+    __tablename__ = 'episodes'
+
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime)
+    nature = db.Column(db.SmallInteger)
+    hospitalisation = db.Column(db.SmallInteger)
+    medication_change = db.Column(db.SmallInteger)
+    suicidal_ideation = db.Column(db.SmallInteger)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 
 """

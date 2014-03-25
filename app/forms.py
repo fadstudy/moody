@@ -49,8 +49,9 @@ class ConsentForm(Form):
 
 class EpisodeForm(Form):
     date_of_episode = TextField('Date of episode', validators=[Required()])
-    nature_of_episode = RadioField('Nature of episode', choices=[('0', 'Mania'),
-                                   ('1', 'Depression')],
+    nature_of_episode = RadioField('Nature of episode',
+                                   choices=[('0', 'Depression'),
+                                            ('1', 'Mania')],
                                    validators=[Required()])
     hospitalisation = RadioField('Did this result in hospitalisation?',
                                  choices=[('0', 'No'), ('1', 'Yes')],

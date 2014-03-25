@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import date, datetime
+from re import search
 
 import facebook
 from flask import jsonify, make_response, redirect, render_template, request, \
@@ -11,7 +12,7 @@ from config import FACEBOOK_APP_ID, FACEBOOK_APP_NAME, LONG_TERM_TOKEN, \
 from forms import AdvancedMoodForm, BasicMoodForm, ConsentForm, EpisodeForm
 from models import Mood, MoodAPI, MoodListAPI, Token, TokenAPI, TokenListAPI, \
                    User, UserAPI, UserListAPI, UserMoodListAPI, \
-                   UserTokenListAPI
+                   UserTokenListAPI, Episode
 from utils import channel, get_current_user
 
 @auth.get_password
@@ -118,13 +119,37 @@ def questionnaire_submit():
         profile = graph.get_object('me')
 
         form = EpisodeForm()
+        episode_date = ''
+
         if form.validate_on_submit():
-            # TODO (Mitch): map the form to the model etc...
-            pass
+            try:
+                if len(search('^\d{1,2}/\d{1,2}/\d{4}$',
+                          form.date_of_episode.data).group(0)) > 1:
+                    date_components = form.date_of_episode.data.split('/')
+                    episode_date = date(day=int(date_components[0]),
+                                        month=int(date_components[1]),
+                                        year=int(date_components[2]))
+                else:
+                    raise Exception
+            except Exception:
+                # TODO (Mitch): Add form error
+                return render_template('questionnaire.html', form=form,
+                                   me=profile, name=FACEBOOK_APP_NAME,
+                                   user=user, year=datetime.utcnow().year)
+
+            episode = Episode(date=episode_date,
+                              nature=form.nature_of_episode.data,
+                              hospitalisation=form.hospitalisation.data,
+                              medication_change=form.medication_change.data,
+                              suicidal_ideation=form.suicidal_ideation.data)
+
+            user.episodes.append(episode)
+            db.session.commit()
+            # TODO (Add flash message)
         else:
             return render_template('questionnaire.html', form=form,
-                                   me=profile, name=FACEBOOK_APP_NAME, user=user,
-                                   year=datetime.utcnow().year)
+                                   me=profile, name=FACEBOOK_APP_NAME,
+                                   user=user, year=datetime.utcnow().year)
 
     return redirect('/')
 
