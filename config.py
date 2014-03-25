@@ -28,4 +28,4 @@ API_USERNAME = environ.get('API_USERNAME')
 if environ.get('DATABASE_URL') is None:
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + path.join(BASE_DIRECTORY, 'app.db') + '?check_same_thread=False'
 else:
-    SQLALCHEMY_DATABASE_URI = environ.get['DATABASE_URL']
+    SQLALCHEMY_DATABASE_URI = environ['DATABASE_URL']
