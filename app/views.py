@@ -29,6 +29,7 @@ def unauthorized():
 def get_channel():
     return render_template('channel.html')
 
+@csrf.exempt
 @app.route('/', methods=['GET', 'POST'])
 def index():
     user = get_current_user()
