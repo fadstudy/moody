@@ -1,14 +1,15 @@
-import os
+from os import environ, path
 
 # App details
-BASE_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
+BASE_DIRECTORY = path.abspath(path.dirname(__file__))
 CSRF_ENABLED = True
-SECRET_KEY = '!th1553cr3tk3yha5thaty0l0swag!'
+DEBUG = environ.get('DEBUG')
+SECRET_KEY = environ.get('SECRET_KEY')
 
 # Facebook details
-FACEBOOK_APP_ID = '498777246878058'
-FACEBOOK_APP_NAME = 'The FAD Study'
-FACEBOOK_APP_SECRET = '02272a1ef565d2bbbec38c64e464094f'
+FACEBOOK_APP_ID = environ.get('FACEBOOK_APP_ID')
+FACEBOOK_APP_NAME = environ.get('FACEBOOK_APP_NAME')
+FACEBOOK_APP_SECRET = environ.get('FACEBOOK_APP_SECRET')
 
 # Token details
 LONG_TERM_TOKEN = 1
@@ -20,11 +21,11 @@ ROLE_USER = 0
 
 # API details
 API_VERSION = 'v0.3'
-API_PASSWORD = 'letmeinbrah'
-API_USERNAME = 'apiuser'
+API_PASSWORD = environ.get('API_PASSWORD')
+API_USERNAME = environ.get('API_USERNAME')
 
 # Database details
-if os.environ.get('DATABASE_URL') is None:
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIRECTORY, 'app.db') + '?check_same_thread=False'
+if environ.get('DATABASE_URL') is None:
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + path.join(BASE_DIRECTORY, 'app.db') + '?check_same_thread=False'
 else:
-    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+    SQLALCHEMY_DATABASE_URI = environ.get['DATABASE_URL']

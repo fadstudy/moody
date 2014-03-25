@@ -145,7 +145,7 @@ def questionnaire_submit():
 
             user.episodes.append(episode)
             db.session.commit()
-            # TODO (Add flash message)
+            # TODO (Mitch): Add flash success message
         else:
             return render_template('questionnaire.html', form=form,
                                    me=profile, name=FACEBOOK_APP_NAME,
