@@ -25,7 +25,7 @@ def get_password(username):
 def unauthorized():
     return make_response(jsonify( { 'message': 'Unauthorized access' } ), 403)
 
-@crsf.exempt
+@csrf.exempt
 @app.route('/channel.html', methods=['GET', 'POST'])
 def get_channel():
     return render_template('channel.html')
