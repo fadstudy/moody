@@ -6,7 +6,7 @@ from flask import jsonify, make_response, redirect, render_template, request, \
                   url_for
 from requests import get
 
-from app import api, app, auth, db
+from app import api, app, auth, csrf, db
 from config import FACEBOOK_APP_ID, FACEBOOK_APP_NAME, LONG_TERM_TOKEN, \
                    SHORT_TERM_TOKEN, API_USERNAME, API_PASSWORD, API_VERSION
 from forms import AdvancedMoodForm, BasicMoodForm, ConsentForm, EpisodeForm
@@ -25,7 +25,6 @@ def get_password(username):
 def unauthorized():
     return make_response(jsonify( { 'message': 'Unauthorized access' } ), 403)
 
-@csrf.exempt
 @app.route('/channel.html', methods=['GET', 'POST'])
 def get_channel():
     return render_template('channel.html')

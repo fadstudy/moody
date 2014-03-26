@@ -9,7 +9,8 @@ api = Api(app)
 auth = HTTPBasicAuth()
 db = SQLAlchemy(app)
 
-CsrfProtect().init_app(app)
+csrf = CsrfProtect()
+csrf.init_app(app)
 
 app.config.from_object('config')
 
